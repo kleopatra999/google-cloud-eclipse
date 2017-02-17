@@ -42,7 +42,6 @@ public class AppEngineWebXmlValidatorTest {
   private static final String XML_NO_BANNED_ELEMENTS = "<test></test>";
   private static final String XML = "<application></application>";
   private static final String BAD_XML = "<";
-  private static final String ELEMENT_MESSAGE = "Project ID should be specified at deploy time.";
   private static final String APPLICATION_MARKER =
       "com.google.cloud.tools.eclipse.appengine.validation.blacklistMarker";
   private static IResource resource;
@@ -99,6 +98,7 @@ public class AppEngineWebXmlValidatorTest {
     IMarker[] markers = resource.findMarkers(APPLICATION_MARKER, true, IResource.DEPTH_ZERO);
     assertEquals(1, markers.length);
     assertEquals(ELEMENT_MESSAGE, (String) markers[0].getAttribute(IMarker.MESSAGE));
+    assertEquals("line 1", markers[0].getAttribute(IMarker.LOCATION));
   }
   
   private static void createFolders(IContainer parent, IPath path) throws CoreException {

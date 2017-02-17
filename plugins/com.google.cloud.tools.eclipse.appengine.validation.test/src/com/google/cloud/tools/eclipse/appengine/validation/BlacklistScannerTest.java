@@ -26,8 +26,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 public class BlacklistScannerTest {
   
-  private static final String ELEMENT_MESSAGE = "Project ID should be specified at deploy time.";
-
+  private static final String ELEMENT_MESSAGE = "Project ID should be specified at deploy time";
   private BlacklistScanner scanner = new BlacklistScanner();
   
   @Before
