@@ -72,6 +72,7 @@ public abstract class AbstractXmlValidator extends AbstractValidator {
     IMarker marker = resource.createMarker(markerId);
     marker.setAttribute(IMarker.SEVERITY, severity);
     marker.setAttribute(IMarker.MESSAGE, element.getMessage());
+    marker.setAttribute(IMarker.LOCATION, "line " + element.getStart().getLineNumber());
     marker.setAttribute(IMarker.CHAR_START, elementOffset);
     marker.setAttribute(IMarker.CHAR_END, elementOffset + element.getLength());
   }
@@ -80,11 +81,12 @@ public abstract class AbstractXmlValidator extends AbstractValidator {
    * Sets error marker where SAX parser fails.
    */
   static void createSaxErrorMessage(IResource resource, SAXException ex) throws CoreException {
+    int lineNumber = ((SAXParseException) ex.getException()).getLineNumber();
     IMarker marker = resource.createMarker("org.eclipse.core.resources.problemmarker");
     marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
     marker.setAttribute(IMarker.MESSAGE, ex.getMessage());
-    marker.setAttribute(IMarker.LINE_NUMBER,
-        ((SAXParseException) ex.getException()).getLineNumber());
+    marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
+    marker.setAttribute(IMarker.LOCATION, "line " + lineNumber);
   }
   
 }

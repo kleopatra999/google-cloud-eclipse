@@ -42,7 +42,7 @@ public class WebXmlValidatorTest {
   private static final String XML = "<web-app xmlns='http://xmlns.jcp.org/xml/ns/javaee'"
       + " version='3.1'></web-app>";
   private static final String ELEMENT_MESSAGE =
-      "App Engine Standard does not support this servlet version.";
+      "App Engine Standard does not support this servlet version";
   private static final String SERVLET_MARKER =
       "com.google.cloud.tools.eclipse.appengine.validation.servletMarker";
   private static IResource resource;

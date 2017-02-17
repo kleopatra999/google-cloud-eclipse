@@ -42,7 +42,7 @@ public class WebXmlSaxParserTest {
         + " version='3.1'></web-app>";
     byte[] bytes = xml.getBytes(StandardCharsets.UTF_8);
     Queue<BannedElement> blacklist = WebXmlSaxParser.readXml(bytes).getBlacklist();
-    String message = "App Engine Standard does not support this servlet version.";
+    String message = "App Engine Standard does not support this servlet version";
     assertEquals(blacklist.poll().getMessage(), message);
   }
 

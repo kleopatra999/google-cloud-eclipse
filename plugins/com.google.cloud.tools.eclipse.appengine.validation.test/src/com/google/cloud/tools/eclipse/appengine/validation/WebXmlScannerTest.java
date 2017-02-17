@@ -41,7 +41,7 @@ public class WebXmlScannerTest {
     scanner.startElement("http://xmlns.jcp.org/xml/ns/javaee", "web-app", "", attributes);
     assertEquals(1, scanner.getBlacklist().size());
     String message = scanner.getBlacklist().peek().getMessage();
-    String expectedMessage = "App Engine Standard does not support this servlet version.";
+    String expectedMessage = "App Engine Standard does not support this servlet version";
     assertEquals(expectedMessage, message);
   }
   
@@ -52,7 +52,7 @@ public class WebXmlScannerTest {
     scanner.startElement("http://java.sun.com/xml/ns/javaee", "web-app", "", attributes);
     assertEquals(1, scanner.getBlacklist().size());
     String message = scanner.getBlacklist().peek().getMessage();
-    String expectedMessage = "App Engine Standard does not support this servlet version.";
+    String expectedMessage = "App Engine Standard does not support this servlet version";
     assertEquals(expectedMessage, message);
   }
   
