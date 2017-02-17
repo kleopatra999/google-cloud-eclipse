@@ -41,7 +41,7 @@ public class BlacklistSaxParserTest {
     String xml = "<application></application>";
     byte[] bytes = xml.getBytes(StandardCharsets.UTF_8);
     Queue<BannedElement> blacklist = BlacklistSaxParser.readXml(bytes).getBlacklist();
-    String message = "Project ID should be specified at deploy time.";
+    String message = "Project ID should be specified at deploy time";
     assertEquals(blacklist.poll().getMessage(), message);
   }
 
