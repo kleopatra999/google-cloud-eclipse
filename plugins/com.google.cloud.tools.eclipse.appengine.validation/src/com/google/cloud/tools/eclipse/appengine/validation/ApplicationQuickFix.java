@@ -16,48 +16,13 @@
 
 package com.google.cloud.tools.eclipse.appengine.validation;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.xml.transform.TransformerException;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.ui.IMarkerResolution;
-
-import com.google.cloud.tools.eclipse.util.Xslt;
-
 /**
  * Applies application.xsl to appengine-web.xml to remove an <application/> element.
  */
-public class ApplicationQuickFix implements IMarkerResolution {
+public class ApplicationQuickFix extends XsltQuickFix {
   
-  private static final String APPLICATION_XSLT = "/xslt/application.xsl";
-  private static final Logger logger = Logger.getLogger(
-    ApplicationQuickFix.class.getName());
-
-  @Override
-  public String getLabel() {
-    // TODO localize
-    return "Remove Application Element";
-  }
-
-  @Override
-  public void run(IMarker marker) {
-    removeApplicationElements(marker.getResource());
-  }
-  
-  private static void removeApplicationElements(IResource resource) {
-    IFile file = (IFile) resource;
-    URL xslt = ApplicationQuickFix.class.getResource(APPLICATION_XSLT);
-    try {
-      Xslt.transformInPlace(file, xslt);
-    } catch (CoreException | IOException | TransformerException ex) {
-      logger.log(Level.SEVERE, ex.getMessage());
-    }
+  public ApplicationQuickFix() {
+    super("/xslt/application.xsl", Messages.getString("remove.application.element"));
   }
   
 }
