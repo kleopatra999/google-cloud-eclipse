@@ -33,7 +33,6 @@ Import-Package: com.google.cloud.tools.eclipse.appengine.libraries,
  org.eclipse.swt.layout,
  org.eclipse.swt.widgets,
  org.eclipse.ui.plugin
-Require-Bundle: com.google.cloud.tools.eclipse.usagetracker,
- org.eclipse.core.expressions,
- org.eclipse.wst.common.project.facet.core,
- com.google.cloud.tools.eclipse.appengine.facets
+Require-Bundle: com.google.cloud.tools.eclipse.appengine.facets,
+ com.google.cloud.tools.eclipse.usagetracker,
+ org.eclipse.core.expressions
