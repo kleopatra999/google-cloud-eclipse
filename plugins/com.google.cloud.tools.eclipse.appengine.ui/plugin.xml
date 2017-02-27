@@ -4,16 +4,18 @@
 
   <!-- TODO how can we test that the properties are defined? -->
   <extension point="org.eclipse.ui.keywords">
-    <keyword label="%googleCloudPlatformAcronym" 
-             id="com.google.cloud.tools.eclipse.appengine.ui.GCPKeyword"/>
-    <keyword label="%appEngineAcronym" 
-             id="com.google.cloud.tools.eclipse.appengine.ui.GAEKeyword"/>
-    <keyword label="%googleName" 
-             id="com.google.cloud.tools.eclipse.appengine.ui.GoogleKeyword"/>
-    <keyword label="%appEngineName" 
+    <keyword label="%appEngineName"
              id="com.google.cloud.tools.eclipse.appengine.ui.AppEngineKeyword"/>
-    <keyword label="%appEngineNameWithSpace" 
+    <keyword label="%appEngineNameWithSpace"
              id="com.google.cloud.tools.eclipse.appengine.ui.AppSpaceEngineKeyword"/>
+    <keyword label="%appEngineAcronym"
+             id="com.google.cloud.tools.eclipse.appengine.ui.GAEKeyword"/>
+    <keyword label="%googleCloudPlatformAcronym"
+             id="com.google.cloud.tools.eclipse.appengine.ui.GCPKeyword"/>
+    <keyword label="%googleName"
+             id="com.google.cloud.tools.eclipse.appengine.ui.GoogleKeyword"/>
+    <keyword label="%appEngineFlexAbbreviation"
+             id="com.google.cloud.tools.eclipse.appengine.ui.FlexKeyword"/>
   </extension>
   <extension
         point="org.eclipse.ui.menus">
@@ -55,7 +57,6 @@
                     value="com.google.cloud.tools.eclipse.appengine.newproject.MavenAppEngineStandard">
               </parameter>
            </command>
-           <!-- Added for flex support -->
            <command
                  commandId="org.eclipse.ui.newWizard"
                  style="push">
@@ -69,7 +70,6 @@
                   forcePluginActivation="true"/>
               </visibleWhen>
            </command>
-           <!-- END -->
         </menu>
         <separator
               name="launch"
