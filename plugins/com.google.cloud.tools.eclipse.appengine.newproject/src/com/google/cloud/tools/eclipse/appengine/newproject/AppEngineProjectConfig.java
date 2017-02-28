@@ -17,6 +17,7 @@
 package com.google.cloud.tools.eclipse.appengine.newproject;
 
 import com.google.cloud.tools.eclipse.appengine.libraries.model.Library;
+import com.google.common.annotations.VisibleForTesting;
 import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
@@ -26,9 +27,9 @@ import java.util.List;
 import org.eclipse.core.resources.IProject;
 
 /**
- * Collects all data needed to create and configure an App Engine Standard Project.
+ * Collects all data needed to create and configure an App Engine Project.
  */
-class AppEngineStandardProjectConfig {
+public class AppEngineProjectConfig {
   private File cloudSdkLocation = null;
   private URI eclipseProjectLocationUri = null;
   private String packageName = "";
@@ -55,7 +56,8 @@ class AppEngineStandardProjectConfig {
   /**
    * Null project location URI means the default location.
    */
-  void setProject(IProject project) {
+  @VisibleForTesting
+  public void setProject(IProject project) {
     this.project = project;
   }
 
@@ -75,7 +77,8 @@ class AppEngineStandardProjectConfig {
     return appEngineLibraries;
   }
 
-  void setAppEngineLibraries(Collection<Library> libraries) {
+  @VisibleForTesting
+  public void setAppEngineLibraries(Collection<Library> libraries) {
     this.appEngineLibraries = new ArrayList<>(libraries);
   }
 

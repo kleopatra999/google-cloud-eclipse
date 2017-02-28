@@ -46,6 +46,19 @@
                  style="push">
               <parameter
                     name="newWizardId"
+                    value="com.google.cloud.tools.eclipse.appengine.newproject.AppEngineFlex">
+              </parameter>
+              <visibleWhen>
+                  <test
+                  property="com.google.cloud.tools.eclipse.appengine.flex.flexFacetExists"
+                  forcePluginActivation="true"/>
+              </visibleWhen>
+           </command>
+           <command
+                 commandId="org.eclipse.ui.newWizard"
+                 style="push">
+              <parameter
+                    name="newWizardId"
                     value="com.google.cloud.tools.eclipse.appengine.newproject.AppEngineStandard">
               </parameter>
            </command>
@@ -56,19 +69,6 @@
                     name="newWizardId"
                     value="com.google.cloud.tools.eclipse.appengine.newproject.MavenAppEngineStandard">
               </parameter>
-           </command>
-           <command
-                 commandId="org.eclipse.ui.newWizard"
-                 style="push">
-              <parameter
-                    name="newWizardId"
-                    value="com.google.cloud.tools.eclipse.appengine.newproject.AppEngineFlex">
-              </parameter>
-              <visibleWhen>
-                  <test
-                  property="com.google.cloud.tools.eclipse.appengine.flex.flexFacetExists"
-                  forcePluginActivation="true"/>
-              </visibleWhen>
            </command>
         </menu>
         <separator
