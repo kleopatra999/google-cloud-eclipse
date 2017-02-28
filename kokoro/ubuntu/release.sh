@@ -8,6 +8,8 @@ set -x
 # create a timestamp file
 date +%s > timestamp.txt
 
+mvn clean install
+
 git/google-cloud-eclipse/kokoro/ubuntu/sign.sh
 
 
