@@ -52,8 +52,15 @@ public abstract class CreateAppEngineWtpProject extends WorkspaceModifyOperation
 
   public abstract void addAppEngineFacet(IProject newProject, IProgressMonitor monitor) throws CoreException;
 
+  /**
+   * Returns a user visible name for the resource operation that generates the files
+   * for the App Engine WTP project.
+   */
   public abstract String getCreateNewProjectOperationLabel();
 
+  /**
+   * Returns the most important file created that the IDE will open in the editor.
+   */
   public abstract IFile createProjectFiles(IProject newProject, AppEngineProjectConfig config,
       IProgressMonitor monitor) throws CoreException;
 

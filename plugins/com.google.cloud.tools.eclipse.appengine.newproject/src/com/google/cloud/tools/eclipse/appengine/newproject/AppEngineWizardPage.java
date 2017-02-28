@@ -30,6 +30,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 
@@ -47,17 +48,17 @@ public abstract class AppEngineWizardPage extends WizardNewProjectCreationPage {
     setImageDescriptor(AppEngineImages.appEngine(64));
   }
 
-  public abstract void sendAnalyticsPing(Composite parent);
+  public abstract void sendAnalyticsPing(Shell parentShell);
 
   public abstract void setHelp(Composite container);
 
   @Override
   public void createControl(Composite parent) {
     super.createControl(parent);
-    sendAnalyticsPing(parent);
+    sendAnalyticsPing(parent.getShell());
 
     Composite container = (Composite) getControl();
-    setHelp(container);
+    setHelp(container.getShell());
 
     ModifyListener pageValidator = new PageValidator();
     createCustomFields(container, pageValidator);

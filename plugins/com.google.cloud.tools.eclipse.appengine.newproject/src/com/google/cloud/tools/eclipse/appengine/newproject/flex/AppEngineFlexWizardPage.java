@@ -18,6 +18,7 @@ package com.google.cloud.tools.eclipse.appengine.newproject.flex;
 
 import com.google.cloud.tools.eclipse.appengine.newproject.AppEngineWizardPage;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
 
 public class AppEngineFlexWizardPage extends AppEngineWizardPage {
   public AppEngineFlexWizardPage() {
@@ -25,7 +26,7 @@ public class AppEngineFlexWizardPage extends AppEngineWizardPage {
   }
 
   @Override
-  public void sendAnalyticsPing(Composite parent) {
+  public void sendAnalyticsPing(Shell shell) {
     // TODO: send analytics ping
   }
 
