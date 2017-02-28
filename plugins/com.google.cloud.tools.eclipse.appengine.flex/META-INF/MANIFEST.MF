@@ -7,6 +7,5 @@ Bundle-Version: 0.1.0.qualifier
 Bundle-Vendor: Google Inc.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Localization: plugin
-Export-Package: com.google.cloud.tools.eclipse.appengine.flex
 Require-Bundle: org.eclipse.wst.common.project.facet.core
 Import-Package: com.google.cloud.tools.eclipse.appengine.facets
