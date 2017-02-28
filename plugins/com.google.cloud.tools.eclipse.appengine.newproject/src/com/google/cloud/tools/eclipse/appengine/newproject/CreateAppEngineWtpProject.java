@@ -17,7 +17,6 @@
 package com.google.cloud.tools.eclipse.appengine.newproject;
 
 import com.google.cloud.tools.eclipse.appengine.libraries.BuildPath;
-import com.google.common.annotations.VisibleForTesting;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.util.Arrays;
@@ -62,7 +61,6 @@ public abstract class CreateAppEngineWtpProject extends WorkspaceModifyOperation
    * @return the file in the project that should be opened in an editor when the wizard finishes;
    *     may be null
    */
-  @VisibleForTesting
   public IFile getMostImportant() {
     return mostImportant;
   }

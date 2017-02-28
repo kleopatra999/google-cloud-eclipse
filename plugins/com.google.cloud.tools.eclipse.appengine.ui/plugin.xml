@@ -4,18 +4,16 @@
 
   <!-- TODO how can we test that the properties are defined? -->
   <extension point="org.eclipse.ui.keywords">
-    <keyword label="%appEngineName"
-             id="com.google.cloud.tools.eclipse.appengine.ui.AppEngineKeyword"/>
-    <keyword label="%appEngineNameWithSpace"
-             id="com.google.cloud.tools.eclipse.appengine.ui.AppSpaceEngineKeyword"/>
-    <keyword label="%appEngineAcronym"
-             id="com.google.cloud.tools.eclipse.appengine.ui.GAEKeyword"/>
-    <keyword label="%googleCloudPlatformAcronym"
+    <keyword label="%googleCloudPlatformAcronym" 
              id="com.google.cloud.tools.eclipse.appengine.ui.GCPKeyword"/>
-    <keyword label="%googleName"
+    <keyword label="%appEngineAcronym" 
+             id="com.google.cloud.tools.eclipse.appengine.ui.GAEKeyword"/>
+    <keyword label="%googleName" 
              id="com.google.cloud.tools.eclipse.appengine.ui.GoogleKeyword"/>
-    <keyword label="%appEngineFlexAbbreviation"
-             id="com.google.cloud.tools.eclipse.appengine.ui.FlexKeyword"/>
+    <keyword label="%appEngineName" 
+             id="com.google.cloud.tools.eclipse.appengine.ui.AppEngineKeyword"/>
+    <keyword label="%appEngineNameWithSpace" 
+             id="com.google.cloud.tools.eclipse.appengine.ui.AppSpaceEngineKeyword"/>
   </extension>
   <extension
         point="org.eclipse.ui.menus">
@@ -41,19 +39,6 @@
         <menu
               id="com.google.cloud.tools.eclipse.appengine.actions.new"
               label="%createNewProject">
-           <command
-                 commandId="org.eclipse.ui.newWizard"
-                 style="push">
-              <parameter
-                    name="newWizardId"
-                    value="com.google.cloud.tools.eclipse.appengine.newproject.AppEngineFlex">
-              </parameter>
-              <visibleWhen>
-                  <test
-                  property="com.google.cloud.tools.eclipse.appengine.flex.flexFacetExists"
-                  forcePluginActivation="true"/>
-              </visibleWhen>
-           </command>
            <command
                  commandId="org.eclipse.ui.newWizard"
                  style="push">
