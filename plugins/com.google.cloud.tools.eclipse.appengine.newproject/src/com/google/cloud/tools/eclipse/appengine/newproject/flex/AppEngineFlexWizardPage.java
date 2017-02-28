@@ -21,7 +21,6 @@ import org.eclipse.swt.widgets.Composite;
 
 public class AppEngineFlexWizardPage extends AppEngineWizardPage {
   public AppEngineFlexWizardPage() {
-    super();
     // TODO: set title and description
   }
 

@@ -40,12 +40,11 @@ public class AppEngineStandardProjectWizard extends AppEngineProjectWizard {
   private ILibraryClasspathContainerResolverService resolverService;
 
   public AppEngineStandardProjectWizard(){
-    super();
     setWindowTitle(Messages.getString("new.app.engine.standard.project"));
   }
 
   @Override
-  public AppEngineWizardPage getWizardPage() {
+  public AppEngineWizardPage createWizardPage() {
     return new AppEngineStandardWizardPage();
   }
 

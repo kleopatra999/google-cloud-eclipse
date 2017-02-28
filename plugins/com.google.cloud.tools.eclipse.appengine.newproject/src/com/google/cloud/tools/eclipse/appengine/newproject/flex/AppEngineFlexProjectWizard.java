@@ -28,7 +28,7 @@ import org.eclipse.core.runtime.Status;
 public class AppEngineFlexProjectWizard extends AppEngineProjectWizard {
 
   @Override
-  public AppEngineWizardPage getWizardPage() {
+  public AppEngineWizardPage createWizardPage() {
     return new AppEngineFlexWizardPage();
   }
 

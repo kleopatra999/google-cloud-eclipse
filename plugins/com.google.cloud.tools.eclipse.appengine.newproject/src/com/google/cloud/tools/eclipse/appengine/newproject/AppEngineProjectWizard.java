@@ -49,7 +49,7 @@ public abstract class AppEngineProjectWizard extends Wizard implements INewWizar
     setNeedsProgressMonitor(true);
   }
 
-  public abstract AppEngineWizardPage getWizardPage();
+  public abstract AppEngineWizardPage createWizardPage();
 
   public abstract void sendAnalyticsPing();
 
@@ -64,7 +64,7 @@ public abstract class AppEngineProjectWizard extends Wizard implements INewWizar
       CloudSdk sdk = new CloudSdk.Builder().build();
       sdk.validateCloudSdk();
       sdk.validateAppEngineJavaComponents();
-      page = getWizardPage();
+      page = createWizardPage();
       addPage(page);
     } catch (CloudSdkNotFoundException ex) {
       addPage(new CloudSdkMissingPage(AnalyticsEvents.APP_ENGINE_NEW_PROJECT_WIZARD_TYPE_NATIVE));

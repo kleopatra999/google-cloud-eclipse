@@ -26,7 +26,7 @@ import java.util.List;
 import org.eclipse.core.resources.IProject;
 
 /**
- * Collects all data needed to create and configure an App Engine Project.
+ * Collects all data needed to create and configure an App Engine Eclipse Project.
  */
 public class AppEngineProjectConfig {
   private File cloudSdkLocation = null;

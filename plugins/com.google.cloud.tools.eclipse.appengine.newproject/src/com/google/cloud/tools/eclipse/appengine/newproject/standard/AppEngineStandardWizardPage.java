@@ -25,7 +25,6 @@ import org.eclipse.ui.PlatformUI;
 
 public class AppEngineStandardWizardPage extends AppEngineWizardPage {
   public AppEngineStandardWizardPage() {
-    super();
     setTitle(Messages.getString("app.engine.standard.project")); //$NON-NLS-1$
     setDescription(Messages.getString("create.app.engine.standard.project")); //$NON-NLS-1$
   }
