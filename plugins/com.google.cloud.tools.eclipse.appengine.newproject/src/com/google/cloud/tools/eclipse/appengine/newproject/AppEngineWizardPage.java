@@ -58,7 +58,7 @@ public abstract class AppEngineWizardPage extends WizardNewProjectCreationPage {
     sendAnalyticsPing(parent.getShell());
 
     Composite container = (Composite) getControl();
-    setHelp(container.getShell());
+    setHelp(container);
 
     ModifyListener pageValidator = new PageValidator();
     createCustomFields(container, pageValidator);
