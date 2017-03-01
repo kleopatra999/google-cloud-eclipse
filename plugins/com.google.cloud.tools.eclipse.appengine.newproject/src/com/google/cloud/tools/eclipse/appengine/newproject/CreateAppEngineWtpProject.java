@@ -42,7 +42,7 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.ide.undo.CreateProjectOperation;
 
 /**
-* Utility to make a new Eclipse project with the App Engine Standard facets in the workspace.
+* Utility to make a new Eclipse App Engine project in the workspace.
 */
 public abstract class CreateAppEngineWtpProject extends WorkspaceModifyOperation {
 
@@ -56,7 +56,7 @@ public abstract class CreateAppEngineWtpProject extends WorkspaceModifyOperation
    * Returns a user visible name for the resource operation that generates the files
    * for the App Engine WTP project.
    */
-  public abstract String getCreateNewProjectOperationLabel();
+  public abstract String getDescription();
 
   /**
    * Returns the most important file created that the IDE will open in the editor.
@@ -91,7 +91,7 @@ public abstract class CreateAppEngineWtpProject extends WorkspaceModifyOperation
     IProjectDescription description = workspace.newProjectDescription(name);
     description.setLocationURI(location);
 
-    String operationLabel = getCreateNewProjectOperationLabel();
+    String operationLabel = getDescription();
     SubMonitor subMonitor = SubMonitor.convert(monitor, operationLabel, 100);
     CreateProjectOperation operation = new CreateProjectOperation(description, operationLabel); 
     try {

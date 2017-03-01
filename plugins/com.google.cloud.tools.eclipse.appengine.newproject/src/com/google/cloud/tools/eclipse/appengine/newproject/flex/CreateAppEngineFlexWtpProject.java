@@ -25,6 +25,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 
+/**
+* Utility to make a new Eclipse project with the App Engine Flexible facets in the workspace.
+*/
 public class CreateAppEngineFlexWtpProject extends CreateAppEngineWtpProject {
 
   CreateAppEngineFlexWtpProject(AppEngineProjectConfig config, IAdaptable uiInfoAdapter) {
@@ -37,7 +40,7 @@ public class CreateAppEngineFlexWtpProject extends CreateAppEngineWtpProject {
   }
 
   @Override
-  public String getCreateNewProjectOperationLabel() {
+  public String getDescription() {
     return Messages.getString("creating.app.engine.flex.project"); //$NON-NLS-1$
   }
 

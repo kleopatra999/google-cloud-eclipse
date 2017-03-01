@@ -30,6 +30,9 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject;
 import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 
+/**
+ * Utility to make a new Eclipse project with the App Engine Standard facets in the workspace.
+ */
 public class CreateAppEngineStandardWtpProject extends CreateAppEngineWtpProject {
   
   public CreateAppEngineStandardWtpProject(AppEngineProjectConfig config,
@@ -49,7 +52,7 @@ public class CreateAppEngineStandardWtpProject extends CreateAppEngineWtpProject
   }
 
   @Override
-  public String getCreateNewProjectOperationLabel() {
+  public String getDescription() {
     return Messages.getString("creating.app.engine.standard.project"); //$NON-NLS-1$
   }
 
