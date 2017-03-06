@@ -17,12 +17,14 @@
 package com.google.cloud.tools.eclipse.appengine.newproject.flex;
 
 import com.google.cloud.tools.eclipse.appengine.newproject.AppEngineWizardPage;
+import com.google.cloud.tools.eclipse.appengine.newproject.Messages;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
 public class AppEngineFlexWizardPage extends AppEngineWizardPage {
   public AppEngineFlexWizardPage() {
-    // TODO: set title and description
+    setTitle(Messages.getString("app.engine.flex.project")); //$NON-NLS-1$
+    setDescription(Messages.getString("create.app.engine.flex.project")); //$NON-NLS-1$
   }
 
   @Override
