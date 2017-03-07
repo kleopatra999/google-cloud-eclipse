@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.eclipse.appengine.validation;
 
+import org.eclipse.core.resources.IFile;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.Locator2;
@@ -25,6 +26,9 @@ import org.xml.sax.ext.Locator2;
  */
 class WebXmlScanner extends AbstractScanner {
 
+  private boolean insideServletClass;
+  private StringBuilder servletClassContents;
+  
   @Override
   public void startElement(String uri, String localName, String qName, Attributes attributes)
       throws SAXException {
@@ -39,6 +43,26 @@ class WebXmlScanner extends AbstractScanner {
             locator.getColumnNumber());
         addToBlacklist(new JavaServletElement(Messages.getString("web.xml.version"), start, 0));
       }
+    }
+    if ("servlet-class".equalsIgnoreCase(localName)) {
+      insideServletClass = true;
+      servletClassContents = new StringBuilder();
+    }
+  }
+  
+  @Override
+  public void characters (char ch[], int start, int length) throws SAXException {
+    if (insideServletClass) {
+      servletClassContents.append(ch, start, length);
+    }
+  }
+  
+  @Override
+  public void endElement (String uri, String localName, String qName) throws SAXException {
+    if ("servlet-class".equalsIgnoreCase(localName)) {
+      insideServletClass = false;
+      String servletClass = servletClassContents.toString();
+      IFile file = IFolder.getFile()
     }
   }
   

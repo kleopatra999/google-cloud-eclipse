@@ -20,7 +20,10 @@ import java.io.IOException;
 import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceProxy;
+import org.eclipse.core.resources.IResourceProxyVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.xml.sax.SAXException;
 
@@ -28,6 +31,8 @@ import org.xml.sax.SAXException;
  * Validator for web.xml.
  */
 public class WebXmlValidator extends AbstractXmlValidator {
+  
+  private String servletClass;
    
   /**
    * Clears all problem markers from the resource, then adds a marker in 
@@ -42,11 +47,29 @@ public class WebXmlValidator extends AbstractXmlValidator {
       Map<BannedElement, Integer> bannedElementOffsetMap =
           ValidationUtils.getOffsetMap(bytes, parserResults);
       for (Map.Entry<BannedElement, Integer> entry : bannedElementOffsetMap.entrySet()) {
+        String markerId =
+            "com.google.cloud.tools.eclipse.appengine.validation.undefinedServletMarker";
+        if (markerId.equals(entry.getKey().getMarkerId())) {
+          if (!exists()) {
+            
+          }
+        }
         createMarker(resource, entry.getKey(), entry.getValue());
       }
     } catch (SAXException ex) {
       createSaxErrorMessage(resource, ex);
     }
+  }
+  
+  private boolean exists(IResource resource, String fileName) {
+    IProject project = resource.getProject();
+    project.accept(new IResourceProxyVisitor() {
+      
+      @Override
+      public boolean visit(IResourceProxy proxy) throws CoreException {
+        if ()
+      }
+    });
   }
 
 }
