@@ -16,7 +16,6 @@
 
 package com.google.cloud.tools.eclipse.appengine.validation;
 
-import org.eclipse.core.resources.IFile;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.Locator2;
@@ -28,6 +27,8 @@ class WebXmlScanner extends AbstractScanner {
 
   private boolean insideServletClass;
   private StringBuilder servletClassContents;
+  private DocumentLocation servletClassLocation;
+  Locator2 locator = getLocator();
   
   @Override
   public void startElement(String uri, String localName, String qName, Attributes attributes)
@@ -38,7 +39,6 @@ class WebXmlScanner extends AbstractScanner {
         || "http://java.sun.com/xml/ns/javaee".equals(uri))) {
       String version = attributes.getValue("version");
       if (!version.equals("2.5")) {
-        Locator2 locator = getLocator();
         DocumentLocation start = new DocumentLocation(locator.getLineNumber(),
             locator.getColumnNumber());
         addToBlacklist(new JavaServletElement(Messages.getString("web.xml.version"), start, 0));
@@ -47,22 +47,25 @@ class WebXmlScanner extends AbstractScanner {
     if ("servlet-class".equalsIgnoreCase(localName)) {
       insideServletClass = true;
       servletClassContents = new StringBuilder();
+      servletClassLocation = new DocumentLocation(locator.getLineNumber(),
+        locator.getColumnNumber() - localName.length() - 2);
     }
   }
   
   @Override
-  public void characters (char ch[], int start, int length) throws SAXException {
+  public void characters(char ch[], int start, int length) throws SAXException {
     if (insideServletClass) {
       servletClassContents.append(ch, start, length);
     }
   }
   
   @Override
-  public void endElement (String uri, String localName, String qName) throws SAXException {
+  public void endElement(String uri, String localName, String qName) throws SAXException {
     if ("servlet-class".equalsIgnoreCase(localName)) {
       insideServletClass = false;
       String servletClass = servletClassContents.toString();
-      IFile file = IFolder.getFile()
+      addToBlacklist(new UndefinedServletElement(
+          servletClass, servletClassLocation, servletClass.length() + 2));
     }
   }
   

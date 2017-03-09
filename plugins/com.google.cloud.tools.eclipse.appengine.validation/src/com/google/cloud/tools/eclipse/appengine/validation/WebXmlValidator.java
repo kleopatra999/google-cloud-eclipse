@@ -17,13 +17,12 @@
 package com.google.cloud.tools.eclipse.appengine.validation;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceProxy;
-import org.eclipse.core.resources.IResourceProxyVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.xml.sax.SAXException;
 
@@ -32,8 +31,6 @@ import org.xml.sax.SAXException;
  */
 public class WebXmlValidator extends AbstractXmlValidator {
   
-  private String servletClass;
-   
   /**
    * Clears all problem markers from the resource, then adds a marker in 
    * web.xml for every {@link BannedElement} found in the file.
@@ -50,8 +47,9 @@ public class WebXmlValidator extends AbstractXmlValidator {
         String markerId =
             "com.google.cloud.tools.eclipse.appengine.validation.undefinedServletMarker";
         if (markerId.equals(entry.getKey().getMarkerId())) {
-          if (!exists()) {
-            
+          UndefinedServletElement element = (UndefinedServletElement) entry.getKey();
+          if (fileExists(element)) {
+            bannedElement
           }
         }
         createMarker(resource, entry.getKey(), entry.getValue());
@@ -61,15 +59,8 @@ public class WebXmlValidator extends AbstractXmlValidator {
     }
   }
   
-  private boolean exists(IResource resource, String fileName) {
-    IProject project = resource.getProject();
-    project.accept(new IResourceProxyVisitor() {
-      
-      @Override
-      public boolean visit(IResourceProxy proxy) throws CoreException {
-        if ()
-      }
-    });
+  private boolean fileExists(UndefinedServletElement element) {
+    
   }
 
 }
