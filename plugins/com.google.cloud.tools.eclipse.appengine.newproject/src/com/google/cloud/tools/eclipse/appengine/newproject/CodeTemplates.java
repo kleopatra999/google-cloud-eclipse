@@ -67,7 +67,7 @@ public class CodeTemplates {
    * @param project the Eclipse project to be filled with templated code
    * @param config replacement values
    * @param isStandardProject true if project should be configured to have the App Engine Standard
-   *   configuration files and false is project should have the App Engine Flexible configuration
+   *   configuration files and false if project should have the App Engine Flexible configuration
    *   files.
    * @param monitor progress monitor
    * @return the most important file created that should be opened in an editor
