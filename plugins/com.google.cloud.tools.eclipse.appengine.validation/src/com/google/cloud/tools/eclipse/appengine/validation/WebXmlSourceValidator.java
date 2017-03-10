@@ -46,6 +46,7 @@ public class WebXmlSourceValidator extends AbstractXmlSourceValidator {
         String markerId =
             "com.google.cloud.tools.eclipse.appengine.validation.undefinedServletMarker";
         if (!markerId.equals(entry.getKey().getMarkerId())) {
+          // TODO: source validation for undefined servlet class
           this.createMessage(reporter, entry.getKey(), entry.getValue(),
                 MARKER_ID, IMessage.HIGH_SEVERITY);
         }
