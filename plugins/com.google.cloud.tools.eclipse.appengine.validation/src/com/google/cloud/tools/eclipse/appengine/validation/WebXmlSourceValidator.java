@@ -43,13 +43,8 @@ public class WebXmlSourceValidator extends AbstractXmlSourceValidator {
       Map<BannedElement, Integer> bannedElementOffsetMap =
           ValidationUtils.getOffsetMap(bytes, parserResults);
       for (Map.Entry<BannedElement, Integer> entry : bannedElementOffsetMap.entrySet()) {
-        String markerId =
-            "com.google.cloud.tools.eclipse.appengine.validation.undefinedServletMarker";
-        if (!markerId.equals(entry.getKey().getMarkerId())) {
-          // TODO: source validation for undefined servlet class
-          this.createMessage(reporter, entry.getKey(), entry.getValue(),
-                MARKER_ID, IMessage.HIGH_SEVERITY);
-        }
+        this.createMessage(reporter, entry.getKey(), entry.getValue(),
+              MARKER_ID, IMessage.HIGH_SEVERITY);
       }
     } catch (SAXException ex) {
       // Do nothing

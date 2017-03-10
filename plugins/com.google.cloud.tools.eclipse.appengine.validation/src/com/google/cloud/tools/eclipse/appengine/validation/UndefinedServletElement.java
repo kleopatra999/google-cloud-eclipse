@@ -26,15 +26,16 @@ public class UndefinedServletElement extends BannedElement {
   private static final String markerId = 
       "com.google.cloud.tools.eclipse.appengine.validation.undefinedServletMarker";
   private static final int severity = IMarker.SEVERITY_ERROR;
-  private String servletClass;
+  private String servletClassName;
   
-  public UndefinedServletElement(String servletClass, DocumentLocation start, int length) {
-    super(Messages.getString("undefined.servlet.class"), markerId, severity, start, length);
-    this.servletClass = servletClass;
+  public UndefinedServletElement(String servletClassName, DocumentLocation start, int length) {
+    super(servletClassName + " " + Messages.getString("undefined.servlet.class"),
+        markerId, severity, start, length);
+    this.servletClassName = servletClassName;
   }
   
-  String getServletClass() {
-    return servletClass;
+  String getServletClassName() {
+    return servletClassName;
   }
 
 }

@@ -17,8 +17,6 @@
 package com.google.cloud.tools.eclipse.appengine.validation;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -32,7 +30,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jdt.core.IType;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -49,6 +46,7 @@ public class WebXmlValidatorTest {
       "com.google.cloud.tools.eclipse.appengine.validation.undefinedServletMarker";
   private static IFile resource;
   private static IProject project;
+  private WebXmlValidator validator = new WebXmlValidator();
   
   @ClassRule public static TestProjectCreator projectCreator = new TestProjectCreator();
   
@@ -64,7 +62,6 @@ public class WebXmlValidatorTest {
         "public class ServletClass {}".getBytes(StandardCharsets.UTF_8)), true, null);
   }
   
-  
   @After
   public void tearDown() throws CoreException {
     if (resource != null) {
@@ -78,7 +75,6 @@ public class WebXmlValidatorTest {
     String xml = "<web-app xmlns='http://xmlns.jcp.org/xml/ns/javaee'"
         + " version='3.1'></web-app>";
     byte[] bytes = xml.getBytes(StandardCharsets.UTF_8);
-    WebXmlValidator validator = new WebXmlValidator();
     validator.validate(resource, bytes);
     IMarker[] markers = resource.findMarkers(SERVLET_MARKER, true, IResource.DEPTH_ZERO);
     assertEquals(1, markers.length);
@@ -92,7 +88,6 @@ public class WebXmlValidatorTest {
         + "<servlet-class>ServletClass</servlet-class>"
         + "</web-app>";
     byte[] bytes = xml.getBytes(StandardCharsets.UTF_8);
-    WebXmlValidator validator = new WebXmlValidator();
     validator.validate(resource, bytes);
     IMarker[] markers = resource.findMarkers(UNDEFINED_SERVLET_MARKER, true, IResource.DEPTH_ZERO);
     assertEquals(0, markers.length);
@@ -102,19 +97,14 @@ public class WebXmlValidatorTest {
   public void testValidate_nonexistingServletClass()
       throws IOException, CoreException, ParserConfigurationException {
     String xml = "<web-app xmlns='http://java.sun.com/xml/ns/javaee' version='2.5'>"
-        + "<servlet-class>DNE</servlet-class>"
+        + "<servlet-class>DoesNotExist</servlet-class>"
         + "</web-app>";
     byte[] bytes = xml.getBytes(StandardCharsets.UTF_8);
-    WebXmlValidator validator = new WebXmlValidator();
     validator.validate(resource, bytes);
     IMarker[] markers = resource.findMarkers(UNDEFINED_SERVLET_MARKER, true, IResource.DEPTH_ZERO);
     assertEquals(1, markers.length);
-  }
-  
-  @Test
-  public void testFindClass() {
-    IType type = WebXmlValidator.findClass("ServletClass", project);
-    assertNotNull(type);
+    String expectedMessage = "DoesNotExist " + Messages.getString("undefined.servlet.class");
+    assertEquals(expectedMessage, markers[0].getAttribute(IMarker.MESSAGE));
   }
   
   private static void createFolders(IContainer parent, IPath path) throws CoreException {

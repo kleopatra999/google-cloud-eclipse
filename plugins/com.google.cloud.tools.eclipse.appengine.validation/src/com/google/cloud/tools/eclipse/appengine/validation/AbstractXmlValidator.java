@@ -82,8 +82,7 @@ public abstract class AbstractXmlValidator extends AbstractValidator {
     marker.setAttribute(IMarker.SEVERITY, element.getSeverity());
     marker.setAttribute(IMarker.MESSAGE, element.getMessage());
     marker.setAttribute(IMarker.LOCATION, "line " + element.getStart().getLineNumber());
-    marker.setAttribute(IMarker.CHAR_START, elementOffset);
-    marker.setAttribute(IMarker.CHAR_END, elementOffset + element.getLength());
+    marker.setAttribute(IMarker.LINE_NUMBER, element.getStart().getLineNumber());
   }
   
   /**
