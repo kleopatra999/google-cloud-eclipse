@@ -29,7 +29,7 @@ public class UndefinedServletElement extends BannedElement {
   private String servletClass;
   
   public UndefinedServletElement(String servletClass, DocumentLocation start, int length) {
-    super("This class does not exist in the project.", markerId, severity, start, length);
+    super(Messages.getString("undefined.servlet.class"), markerId, severity, start, length);
     this.servletClass = servletClass;
   }
   

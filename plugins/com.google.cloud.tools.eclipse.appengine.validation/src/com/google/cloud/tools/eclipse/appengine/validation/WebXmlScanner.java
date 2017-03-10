@@ -28,7 +28,6 @@ class WebXmlScanner extends AbstractScanner {
   private boolean insideServletClass;
   private StringBuilder servletClassContents;
   private DocumentLocation servletClassLocation;
-  Locator2 locator = getLocator();
   
   @Override
   public void startElement(String uri, String localName, String qName, Attributes attributes)
@@ -39,12 +38,14 @@ class WebXmlScanner extends AbstractScanner {
         || "http://java.sun.com/xml/ns/javaee".equals(uri))) {
       String version = attributes.getValue("version");
       if (!version.equals("2.5")) {
+        Locator2 locator = getLocator();
         DocumentLocation start = new DocumentLocation(locator.getLineNumber(),
             locator.getColumnNumber());
         addToBlacklist(new JavaServletElement(Messages.getString("web.xml.version"), start, 0));
       }
     }
     if ("servlet-class".equalsIgnoreCase(localName)) {
+      Locator2 locator = getLocator();
       insideServletClass = true;
       servletClassContents = new StringBuilder();
       servletClassLocation = new DocumentLocation(locator.getLineNumber(),
@@ -65,7 +66,7 @@ class WebXmlScanner extends AbstractScanner {
       insideServletClass = false;
       String servletClass = servletClassContents.toString();
       addToBlacklist(new UndefinedServletElement(
-          servletClass, servletClassLocation, servletClass.length() + 2));
+          servletClass, servletClassLocation, localName.length() + 2));
     }
   }
   
