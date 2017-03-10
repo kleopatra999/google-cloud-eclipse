@@ -46,8 +46,7 @@ import org.xml.sax.SAXException;
  */
 public class WebXmlValidator extends AbstractXmlValidator {
   
-  private static final Logger logger = Logger.getLogger(
-    WebXmlValidator.class.getName());
+  private static final Logger logger = Logger.getLogger(WebXmlValidator.class.getName());
   
   /**
    * Clears all problem markers from the resource, then adds a marker in 

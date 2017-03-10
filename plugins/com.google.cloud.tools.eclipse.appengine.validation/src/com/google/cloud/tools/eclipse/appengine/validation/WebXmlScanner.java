@@ -49,7 +49,7 @@ class WebXmlScanner extends AbstractScanner {
       insideServletClass = true;
       servletClassContents = new StringBuilder();
       servletClassLocation = new DocumentLocation(locator.getLineNumber(),
-        locator.getColumnNumber() - localName.length() - 2);
+          locator.getColumnNumber() - localName.length() - 2);
     }
   }
   
