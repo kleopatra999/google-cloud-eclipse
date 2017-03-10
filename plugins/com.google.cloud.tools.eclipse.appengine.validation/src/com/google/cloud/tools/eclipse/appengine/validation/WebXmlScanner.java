@@ -107,7 +107,7 @@ class WebXmlScanner extends AbstractScanner {
   }
   
   /**
-   * Performs the search for a class of a given pattern within the project.
+   * Searches for a class that matches a pattern.
    */
   static void performSearch(SearchPattern pattern, IJavaSearchScope scope, SearchRequestor requestor,
       IProgressMonitor monitor) {

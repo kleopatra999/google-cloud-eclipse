@@ -103,7 +103,7 @@ public class WebXmlValidatorTest {
     validator.validate(resource, bytes);
     IMarker[] markers = resource.findMarkers(UNDEFINED_SERVLET_MARKER, true, IResource.DEPTH_ZERO);
     assertEquals(1, markers.length);
-    String expectedMessage = "DoesNotExist " + Messages.getString("undefined.servlet.class");
+    String expectedMessage = "DoesNotExist does not exist in the project";
     assertEquals(expectedMessage, markers[0].getAttribute(IMarker.MESSAGE));
   }
   

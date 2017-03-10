@@ -29,7 +29,7 @@ public class UndefinedServletElement extends BannedElement {
   private String servletClassName;
   
   public UndefinedServletElement(String servletClassName, DocumentLocation start, int length) {
-    super(servletClassName + " " + Messages.getString("undefined.servlet.class"),
+    super(Messages.getString("undefined.servlet.class", servletClassName),
         markerId, severity, start, length);
     this.servletClassName = servletClassName;
   }
