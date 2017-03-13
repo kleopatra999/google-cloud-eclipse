@@ -98,7 +98,9 @@ public abstract class AppEngineProjectWizard extends Wizard implements INewWizar
       config.setEclipseProjectLocationUri(page.getLocationURI());
     }
 
-    config.setAppEngineLibraries(page.getSelectedLibraries());
+    if (page.isLibrarySelectorGroupAvailable()) {
+      config.setAppEngineLibraries(page.getSelectedLibraries());
+    }
 
     // todo set up
     IAdaptable uiInfoAdapter = WorkspaceUndoUtil.getUIInfoAdapter(getShell());

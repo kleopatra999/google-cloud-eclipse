@@ -42,10 +42,12 @@ public abstract class AppEngineWizardPage extends WizardNewProjectCreationPage {
   private Text javaPackageField;
   private AppEngineLibrariesSelectorGroup appEngineLibrariesSelectorGroup;
   private Text serviceNameField;
+  private boolean showLibrariesSelectorGroup;
 
-  public AppEngineWizardPage() {
+  public AppEngineWizardPage(boolean showLibrariesSelectorGroup) {
     super("basicNewProjectPage"); //$NON-NLS-1$
     setImageDescriptor(AppEngineImages.appEngine(64));
+    this.showLibrariesSelectorGroup = showLibrariesSelectorGroup;
   }
 
   public abstract void sendAnalyticsPing(Shell parentShell);
@@ -64,7 +66,9 @@ public abstract class AppEngineWizardPage extends WizardNewProjectCreationPage {
     createCustomFields(container, pageValidator);
 
     // Manage APIs
-    appEngineLibrariesSelectorGroup = new AppEngineLibrariesSelectorGroup(container);
+    if (showLibrariesSelectorGroup) {
+      appEngineLibrariesSelectorGroup = new AppEngineLibrariesSelectorGroup(container);
+    }
 
     setPageComplete(validatePage());
     // Show enter project name on opening
@@ -154,12 +158,22 @@ public abstract class AppEngineWizardPage extends WizardNewProjectCreationPage {
   }
 
   public Collection<Library> getSelectedLibraries() {
-    return appEngineLibrariesSelectorGroup.getSelectedLibraries();
+    if (appEngineLibrariesSelectorGroup == null) {
+      return null;
+    } else {
+      return appEngineLibrariesSelectorGroup.getSelectedLibraries();
+    }
+  }
+
+  public boolean isLibrarySelectorGroupAvailable() {
+    return showLibrariesSelectorGroup;
   }
 
   @Override
   public void dispose() {
-    appEngineLibrariesSelectorGroup.dispose();
+    if (appEngineLibrariesSelectorGroup != null) {
+      appEngineLibrariesSelectorGroup.dispose();
+    }
     super.dispose();
   }
 
