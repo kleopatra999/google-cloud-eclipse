@@ -21,6 +21,7 @@ import com.google.cloud.tools.eclipse.appengine.ui.AppEngineImages;
 import com.google.cloud.tools.eclipse.appengine.ui.AppEngineLibrariesSelectorGroup;
 import java.io.File;
 import java.util.Collection;
+import java.util.HashSet;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -159,14 +160,10 @@ public abstract class AppEngineWizardPage extends WizardNewProjectCreationPage {
 
   public Collection<Library> getSelectedLibraries() {
     if (appEngineLibrariesSelectorGroup == null) {
-      return null;
+      return new HashSet<Library>();
     } else {
       return appEngineLibrariesSelectorGroup.getSelectedLibraries();
     }
-  }
-
-  public boolean isLibrarySelectorGroupAvailable() {
-    return showLibrariesSelectorGroup;
   }
 
   @Override
