@@ -20,20 +20,23 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.jdt.core.search.SearchEngine;
 import org.eclipse.jdt.core.search.SearchMatch;
 import org.eclipse.jdt.core.search.SearchParticipant;
 import org.eclipse.jdt.core.search.SearchPattern;
-import org.eclipse.jdt.core.search.SearchRequestor;
-import org.eclipse.jdt.internal.corext.refactoring.CollectingSearchRequestor;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.Locator2;
+
+import com.google.common.base.Strings;
 
 /**
  * Adds <web-app> element to {@link BannedElement} queue if the Servlet version is not 2.5.
@@ -41,9 +44,18 @@ import org.xml.sax.ext.Locator2;
 class WebXmlScanner extends AbstractScanner {
 
   private static final Logger logger = Logger.getLogger(WebXmlScanner.class.getName());
-  private boolean insideServletClass;
-  private StringBuilder servletClassContents;
-  private DocumentLocation servletClassLocation;
+  
+  /** The {@code web.xml}'s JDT project; may be {@code null}. */
+  private IJavaProject project;
+  private boolean insideServletClassElement;
+  private StringBuilder servletClassElementContents;
+  private DocumentLocation servletClassElementLocation;
+  
+  WebXmlScanner(IFile file) {
+    if (file != null) {
+      project = JavaCore.create(file.getProject());
+    }
+  }
   
   @Override
   public void startElement(String uri, String localName, String qName, Attributes attributes)
@@ -62,28 +74,29 @@ class WebXmlScanner extends AbstractScanner {
     }
     if ("servlet-class".equalsIgnoreCase(localName)) {
       Locator2 locator = getLocator();
-      insideServletClass = true;
-      servletClassContents = new StringBuilder();
-      servletClassLocation = new DocumentLocation(locator.getLineNumber(),
-          locator.getColumnNumber() - localName.length() - 2);
+      insideServletClassElement = true;
+      servletClassElementContents = new StringBuilder();
+      servletClassElementLocation =
+          new DocumentLocation(locator.getLineNumber(), locator.getColumnNumber());
     }
   }
   
   @Override
   public void characters(char ch[], int start, int length) throws SAXException {
-    if (insideServletClass) {
-      servletClassContents.append(ch, start, length);
+    if (insideServletClassElement) {
+      servletClassElementContents.append(ch, start, length);
     }
   }
   
   @Override
   public void endElement(String uri, String localName, String qName) throws SAXException {
     if ("servlet-class".equalsIgnoreCase(localName)) {
-      insideServletClass = false;
-      String servletClassName = servletClassContents.toString();
-      if (findClass(servletClassName) == null) {
+      insideServletClassElement = false;
+      String servletClassName = servletClassElementContents.toString();
+      if (!classExists(project, servletClassName)) {
+        // Adding 2 to localName.length() accounts for start/end angle brackets.
         addToBlacklist(new UndefinedServletElement(
-            servletClassName, servletClassLocation, localName.length() + 2));
+            servletClassName, servletClassElementLocation, servletClassName.length()));
       }
     }
   }
@@ -91,34 +104,36 @@ class WebXmlScanner extends AbstractScanner {
   /**
    * Checks for the given class name within the project.
    */
-  static IType findClass(String typeName) {
-    if (typeName == null || "".equals(typeName)) {
-      return null;
+  static boolean classExists(IJavaProject project, String typeName) {
+    if (Strings.isNullOrEmpty(typeName)) {
+      return false;
     }
     SearchPattern pattern = SearchPattern.createPattern(typeName, 
         IJavaSearchConstants.CLASS,
         IJavaSearchConstants.DECLARATIONS,
         SearchPattern.R_EXACT_MATCH | SearchPattern.R_ERASURE_MATCH);
-    IJavaSearchScope scope = SearchEngine.createWorkspaceScope();
-    CollectingSearchRequestor requestor = new CollectingSearchRequestor();
-    performSearch(pattern, scope, requestor, null);
-    List<SearchMatch> results = requestor.getResults();
-    return results.isEmpty() ? null : (IType) results.get(0).getElement();
+    IJavaSearchScope scope = project == null ? SearchEngine.createWorkspaceScope()
+        : SearchEngine.createJavaSearchScope(new IJavaElement[] {project});
+    ClassSearchRequestor requestor = new ClassSearchRequestor();
+    return performSearch(pattern, scope, requestor, null);
   }
   
   /**
    * Searches for a class that matches a pattern.
    */
-  static void performSearch(SearchPattern pattern, IJavaSearchScope scope, SearchRequestor requestor,
-      IProgressMonitor monitor) {
+  static boolean performSearch(SearchPattern pattern, IJavaSearchScope scope,
+      ClassSearchRequestor requestor, IProgressMonitor monitor) {
     SearchEngine searchEngine = new SearchEngine();
     try {
       searchEngine.search(pattern,
           new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() },
           scope, requestor, monitor);
+      List<SearchMatch> results = requestor.getResults();
+      return !results.isEmpty();
     } catch (CoreException ex) {
       logger.log(Level.SEVERE, ex.getMessage());
     }
+    return false;
   }
   
 }

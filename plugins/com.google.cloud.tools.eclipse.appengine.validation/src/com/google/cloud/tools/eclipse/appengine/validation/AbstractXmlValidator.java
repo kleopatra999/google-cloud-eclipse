@@ -57,7 +57,7 @@ public abstract class AbstractXmlValidator extends AbstractValidator {
         IFile file = (IFile) resource;
         try (InputStream in = file.getContents()) {
           byte[] bytes = ByteStreams.toByteArray(in);
-          validate(resource, bytes);
+          validate(file, bytes);
         }
       }
     } catch (IOException | CoreException | ParserConfigurationException ex) {
@@ -66,7 +66,7 @@ public abstract class AbstractXmlValidator extends AbstractValidator {
     return new ValidationResult();
   }
     
-  abstract protected void validate(IResource resource, byte[] bytes) 
+  abstract protected void validate(IFile resource, byte[] bytes) 
       throws CoreException, IOException, ParserConfigurationException;
   
   static void deleteMarkers(IResource resource) throws CoreException {

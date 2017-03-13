@@ -17,7 +17,8 @@
 package com.google.cloud.tools.eclipse.appengine.validation;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
@@ -29,7 +30,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -43,25 +47,34 @@ import com.google.cloud.tools.eclipse.test.util.project.TestProjectCreator;
 public class WebXmlScannerTest {
 
   private static IFile resource;
-  private static IProject project;
-  private WebXmlScanner scanner = new WebXmlScanner();
+  private static IFile servletClass;
+  private static IJavaProject javaProject;
+  private WebXmlScanner scanner;
   
-  @ClassRule public static TestProjectCreator projectCreator = new TestProjectCreator();
+  @ClassRule public static TestProjectCreator projectCreator = new TestProjectCreator().withClasspathContainerPath("src/main/java");
   
   @BeforeClass
   public static void setUpBeforeClass() throws CoreException {
-    project = projectCreator.getProject();
+    IProject project = projectCreator.getProject();
+    javaProject = JavaCore.create(project);
+    
+    IPackageFragmentRoot root = javaProject.getPackageFragmentRoot("src/main/java");
+    root.createPackageFragment("com.test", false, null);
     createFolders(project, new Path("src/main/webapp/WEB-INF"));
     resource = project.getFile("src/main/webapp/WEB-INF/web.xml");
     resource.create(new ByteArrayInputStream(new byte[0]), true, null);
     createFolders(project, new Path("src/main/java"));
-    IFile file = project.getFile("src/main/java/ServletClass.java");
-    file.create(new ByteArrayInputStream(
+    
+    servletClass = project.getFile("src/main/java/ServletClass.java");
+    servletClass.create(new ByteArrayInputStream(
         "public class ServletClass {}".getBytes(StandardCharsets.UTF_8)), true, null);
+
+    
   }
   
   @Before
   public void setUp() throws SAXException {
+    scanner = new WebXmlScanner(resource);
     scanner.setDocumentLocator(new Locator2Impl());
     scanner.startDocument();
   }
@@ -98,15 +111,25 @@ public class WebXmlScannerTest {
   
   @Test
   public void testFindClass() {
-    IType type = WebXmlScanner.findClass("ServletClass");
-    assertNotNull(type);
+    assertFalse(WebXmlScanner.classExists(javaProject, "DoesNotExist"));
+    assertFalse(WebXmlScanner.classExists(null, null));
+    assertFalse(WebXmlScanner.classExists(null, ""));
+    assertTrue(WebXmlScanner.classExists(javaProject, "ServletClass"));
+  }
+  
+  @Test
+  public void testFindClass_inPackage() throws JavaModelException {
+    assertFalse(WebXmlScanner.classExists(javaProject, "DoesNotExist"));
+    assertFalse(WebXmlScanner.classExists(null, null));
+    assertFalse(WebXmlScanner.classExists(null, ""));
+    assertTrue(WebXmlScanner.classExists(javaProject, "com.test.ServletClassInPackage"));
   }
   
   private static void createFolders(IContainer parent, IPath path) throws CoreException {
     if (!path.isEmpty()) {
       IFolder folder = parent.getFolder(new Path(path.segment(0)));
       if (!folder.exists()) {
-        folder.create(true,  true,  null);
+        folder.create(false, true,  null);
       }
       createFolders(folder, path.removeFirstSegments(1));
     }

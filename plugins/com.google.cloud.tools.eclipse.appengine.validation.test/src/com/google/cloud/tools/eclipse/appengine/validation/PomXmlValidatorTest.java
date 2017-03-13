@@ -18,6 +18,7 @@ package com.google.cloud.tools.eclipse.appengine.validation;
 
 import static org.junit.Assert.assertEquals;
 
+import com.google.cloud.tools.eclipse.test.util.project.TestProjectCreator;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -35,7 +36,6 @@ import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
-import com.google.cloud.tools.eclipse.test.util.project.TestProjectCreator;
 
 public class PomXmlValidatorTest {
 
@@ -49,7 +49,7 @@ public class PomXmlValidatorTest {
       + "<artifactId>appengine-maven-plugin</artifactId></plugin></plugins></build></project>";
   private static final String PLUGIN_MARKER =
       "com.google.cloud.tools.eclipse.appengine.validation.mavenPluginMarker";
-  private static IResource resource;
+  private static IFile webXmlFile;
   private static IProject project;
   
   @ClassRule public static TestProjectCreator projectCreator = new TestProjectCreator();
@@ -58,15 +58,15 @@ public class PomXmlValidatorTest {
   public static void setUp() throws CoreException {
     project = projectCreator.getProject();
     createFolders(project, new Path("src/main/webapp/WEB-INF"));
-    resource = project.getFile("src/main/webapp/WEB-INF/web.xml");
-    ((IFile) resource).create(new ByteArrayInputStream(new byte[0]), true, null);
+    webXmlFile = project.getFile("src/main/webapp/WEB-INF/web.xml");
+    ((IFile) webXmlFile).create(new ByteArrayInputStream(new byte[0]), true, null);
   }
   
   
   @After
   public void tearDown() throws CoreException {
-    if (resource != null) {
-      resource.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ZERO);
+    if (webXmlFile != null) {
+      webXmlFile.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ZERO);
     }
   }
   
@@ -75,8 +75,8 @@ public class PomXmlValidatorTest {
       throws IOException, CoreException, ParserConfigurationException {
     byte[] bytes = XML_NO_BANNED_ELEMENTS.getBytes(StandardCharsets.UTF_8);
     PomXmlValidator validator = new PomXmlValidator();
-    validator.validate(resource, bytes);
-    IMarker[] markers = resource.findMarkers(PLUGIN_MARKER, true, IResource.DEPTH_ZERO);
+    validator.validate(webXmlFile, bytes);
+    IMarker[] markers = webXmlFile.findMarkers(PLUGIN_MARKER, true, IResource.DEPTH_ZERO);
     assertEquals(0, markers.length);
   }
 
@@ -85,8 +85,8 @@ public class PomXmlValidatorTest {
       throws IOException, CoreException, ParserConfigurationException {
     byte[] bytes = XML.getBytes(StandardCharsets.UTF_8);
     PomXmlValidator validator = new PomXmlValidator();
-    validator.validate(resource, bytes);
-    IMarker[] markers = resource.findMarkers(PLUGIN_MARKER, true, IResource.DEPTH_ZERO);
+    validator.validate(webXmlFile, bytes);
+    IMarker[] markers = webXmlFile.findMarkers(PLUGIN_MARKER, true, IResource.DEPTH_ZERO);
     assertEquals(1, markers.length);
     String message = Messages.getString("maven.plugin");
     assertEquals(message, (String) markers[0].getAttribute(IMarker.MESSAGE));

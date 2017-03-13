@@ -44,7 +44,7 @@ public class AppEngineWebXmlValidatorTest {
   private static final String BAD_XML = "<";
   private static final String APPLICATION_MARKER =
       "com.google.cloud.tools.eclipse.appengine.validation.appEngineBlacklistMarker";
-  private static IResource resource;
+  private static IFile webXmlFile;
   private static IProject project;
 
   @ClassRule public static TestProjectCreator projectCreator = new TestProjectCreator();
@@ -55,14 +55,14 @@ public class AppEngineWebXmlValidatorTest {
     createFolders(project, new Path("src/main/webapp/WEB-INF"));
     IFile webXml = project.getFile("src/main/webapp/WEB-INF/web.xml");
     webXml.create(new ByteArrayInputStream(new byte[0]), true, null);
-    resource = webXml;
+    webXmlFile = webXml;
   }
 
 
   @After
   public void tearDown() throws CoreException {
-    if (resource != null) {
-      resource.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ZERO);
+    if (webXmlFile != null) {
+      webXmlFile.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ZERO);
     }
   }
 
@@ -71,8 +71,8 @@ public class AppEngineWebXmlValidatorTest {
       throws IOException, CoreException, ParserConfigurationException {
     byte[] bytes = BAD_XML.getBytes(StandardCharsets.UTF_8);
     AppEngineWebXmlValidator validator = new AppEngineWebXmlValidator();
-    validator.validate(resource, bytes);
-    IMarker[] markers = resource.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ZERO);
+    validator.validate(webXmlFile, bytes);
+    IMarker[] markers = webXmlFile.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ZERO);
     String resultMessage = (String) markers[0].getAttribute(IMarker.MESSAGE);
     assertEquals("XML document structures must start and end within the same entity.",
         resultMessage);
@@ -83,8 +83,8 @@ public class AppEngineWebXmlValidatorTest {
       throws IOException, CoreException, ParserConfigurationException {
     byte[] bytes = XML_NO_BANNED_ELEMENTS.getBytes(StandardCharsets.UTF_8);
     AppEngineWebXmlValidator validator = new AppEngineWebXmlValidator();
-    validator.validate(resource, bytes);
-    IMarker[] markers = resource.findMarkers(APPLICATION_MARKER, true, IResource.DEPTH_ZERO);
+    validator.validate(webXmlFile, bytes);
+    IMarker[] markers = webXmlFile.findMarkers(APPLICATION_MARKER, true, IResource.DEPTH_ZERO);
     assertEquals(0, markers.length);
   }
 
@@ -93,8 +93,8 @@ public class AppEngineWebXmlValidatorTest {
       throws IOException, CoreException, ParserConfigurationException {
     byte[] bytes = XML.getBytes(StandardCharsets.UTF_8);
     AppEngineWebXmlValidator validator = new AppEngineWebXmlValidator();
-    validator.validate(resource, bytes);
-    IMarker[] markers = resource.findMarkers(APPLICATION_MARKER, true, IResource.DEPTH_ZERO);
+    validator.validate(webXmlFile, bytes);
+    IMarker[] markers = webXmlFile.findMarkers(APPLICATION_MARKER, true, IResource.DEPTH_ZERO);
     assertEquals(1, markers.length);
     String message = Messages.getString("application.element");
     assertEquals(message, markers[0].getAttribute(IMarker.MESSAGE));
