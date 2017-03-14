@@ -51,18 +51,25 @@ public class WebXmlScannerTest {
   
   @BeforeClass
   public static void setUpBeforeClass() throws CoreException {
+    // Project's default source folder is the main project folder.
     IProject project = projectCreator.getProject();
     javaProject = projectCreator.getJavaProject();
     
     createFolders(project, new Path("src/main/webapp/WEB-INF"));
     resource = project.getFile("src/main/webapp/WEB-INF/web.xml");
     resource.create(new ByteArrayInputStream(new byte[0]), true, null);
-    createFolders(project, new Path("src/main/java"));
     
+    createFolders(project, new Path("src/main/java"));
     IFile servletClass = project.getFile("src/main/java/ServletClass.java");
     servletClass.create(
-    	new ByteArrayInputStream("package src.main.java; public class ServletClass {}"
-    	    .getBytes(StandardCharsets.UTF_8)), true, null);
+    	new ByteArrayInputStream("public class ServletClass {}".getBytes(StandardCharsets.UTF_8)),
+    	true, null);
+    
+    createFolders(project, new Path("com/example"));
+    IFile servletClassInPackage = project.getFile("com/example/ServletClassInPackage.java");
+    servletClassInPackage.create(
+        new ByteArrayInputStream("package com.example; public class ServletClassInPackage {}"
+            .getBytes(StandardCharsets.UTF_8)), true, null);
   }
   
   @Before
@@ -112,7 +119,7 @@ public class WebXmlScannerTest {
   
   @Test
   public void testFindClass_inPackage() {
-    assertTrue(WebXmlScanner.classExists(javaProject, "src.main.java.ServletClass"));
+    assertTrue(WebXmlScanner.classExists(javaProject, "com.example.ServletClassInPackage"));
   }
   
   private static void createFolders(IContainer parent, IPath path) throws CoreException {
