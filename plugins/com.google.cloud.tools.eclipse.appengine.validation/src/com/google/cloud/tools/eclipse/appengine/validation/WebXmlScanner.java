@@ -39,7 +39,7 @@ import org.xml.sax.ext.Locator2;
 import com.google.common.base.Strings;
 
 /**
- * Adds <web-app> element to {@link BannedElement} queue if the Servlet version is not 2.5.
+ * Scans web.xml for {@link BannedElement}s.
  */
 class WebXmlScanner extends AbstractScanner {
 
@@ -62,17 +62,18 @@ class WebXmlScanner extends AbstractScanner {
       throws SAXException {
     // Checks for expected namespace URI. Assume something else is going on if
     // web.xml has an unexpected root namespace.
-    if ("web-app".equalsIgnoreCase(localName) && ("http://xmlns.jcp.org/xml/ns/javaee".equals(uri)
+    if ("web-app".equals(localName) && ("http://xmlns.jcp.org/xml/ns/javaee".equals(uri)
         || "http://java.sun.com/xml/ns/javaee".equals(uri))) {
       String version = attributes.getValue("version");
       if (!version.equals("2.5")) {
+    	// Adds <web-app> element to the queue if the Servlet version is not 2.5.
         Locator2 locator = getLocator();
         DocumentLocation start = new DocumentLocation(locator.getLineNumber(),
             locator.getColumnNumber());
         addToBlacklist(new JavaServletElement(Messages.getString("web.xml.version"), start, 0));
       }
     }
-    if ("servlet-class".equalsIgnoreCase(localName)) {
+    if ("servlet-class".equals(localName)) {
       Locator2 locator = getLocator();
       insideServletClassElement = true;
       servletClassElementContents = new StringBuilder();
@@ -90,20 +91,17 @@ class WebXmlScanner extends AbstractScanner {
   
   @Override
   public void endElement(String uri, String localName, String qName) throws SAXException {
-    if ("servlet-class".equalsIgnoreCase(localName)) {
+    if ("servlet-class".equals(localName)) {
       insideServletClassElement = false;
       String servletClassName = servletClassElementContents.toString();
       if (!classExists(project, servletClassName)) {
-        // Adding 2 to localName.length() accounts for start/end angle brackets.
+    	// Adds <servlet-class> element to the queue if the class doesn't exist in the project.
         addToBlacklist(new UndefinedServletElement(
             servletClassName, servletClassElementLocation, servletClassName.length()));
       }
     }
   }
   
-  /**
-   * Checks for the given class name within the project.
-   */
   static boolean classExists(IJavaProject project, String typeName) {
     if (Strings.isNullOrEmpty(typeName)) {
       return false;
@@ -114,17 +112,17 @@ class WebXmlScanner extends AbstractScanner {
         SearchPattern.R_EXACT_MATCH | SearchPattern.R_ERASURE_MATCH);
     IJavaSearchScope scope = project == null ? SearchEngine.createWorkspaceScope()
         : SearchEngine.createJavaSearchScope(new IJavaElement[] {project});
-    ClassSearchRequestor requestor = new ClassSearchRequestor();
-    return performSearch(pattern, scope, requestor, null);
+    return performSearch(pattern, scope, null);
   }
   
   /**
    * Searches for a class that matches a pattern.
    */
   static boolean performSearch(SearchPattern pattern, IJavaSearchScope scope,
-      ClassSearchRequestor requestor, IProgressMonitor monitor) {
-    SearchEngine searchEngine = new SearchEngine();
+      IProgressMonitor monitor) {
     try {
+      SearchEngine searchEngine = new SearchEngine();
+      ClassSearchRequestor requestor = new ClassSearchRequestor();
       searchEngine.search(pattern,
           new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() },
           scope, requestor, monitor);
@@ -132,8 +130,8 @@ class WebXmlScanner extends AbstractScanner {
       return !results.isEmpty();
     } catch (CoreException ex) {
       logger.log(Level.SEVERE, ex.getMessage());
+      return false;
     }
-    return false;
   }
   
 }

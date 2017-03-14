@@ -53,8 +53,7 @@ public abstract class AbstractXmlValidator extends AbstractValidator {
     try {
       IFacetedProject facetedProject = ProjectFacetsManager.create(project);
       if (AppEngineStandardFacet.hasAppEngineFacet(facetedProject)) {
-        IResource resource = event.getResource();
-        IFile file = (IFile) resource;
+        IFile file = (IFile) event.getResource();
         try (InputStream in = file.getContents()) {
           byte[] bytes = ByteStreams.toByteArray(in);
           validate(file, bytes);

@@ -25,7 +25,7 @@ import org.eclipse.jdt.core.search.SearchRequestor;
 
 public class ClassSearchRequestor extends SearchRequestor {
 
-  private List<SearchMatch> matches = new ArrayList<>();
+  private final List<SearchMatch> matches = new ArrayList<>();
   
   @Override
   public void acceptSearchMatch(SearchMatch match) throws CoreException {
