@@ -36,6 +36,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.Locator2;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 
 /**
@@ -102,6 +103,7 @@ class WebXmlScanner extends AbstractScanner {
     }
   }
   
+  @VisibleForTesting
   static boolean classExists(IJavaProject project, String typeName) {
     if (Strings.isNullOrEmpty(typeName)) {
       return false;
@@ -118,6 +120,7 @@ class WebXmlScanner extends AbstractScanner {
   /**
    * Searches for a class that matches a pattern.
    */
+  @VisibleForTesting
   static boolean performSearch(SearchPattern pattern, IJavaSearchScope scope,
       IProgressMonitor monitor) {
     try {

@@ -80,6 +80,14 @@ public class WebXmlScannerTest {
   }
   
   @Test
+  public void testCaseSensitive() throws SAXException {
+    AttributesImpl attributes = new AttributesImpl();
+    attributes.addAttribute("", "", "version", "", "3.1");
+    scanner.startElement("http://xmlns.jcp.org/xml/ns/javaee", "Web-App", "", attributes);
+    assertTrue(scanner.getBlacklist().isEmpty());
+  }
+  
+  @Test
   public void testStartElement_jcpNamespace() throws SAXException {
     AttributesImpl attributes = new AttributesImpl();
     attributes.addAttribute("", "", "version", "", "3.1");
