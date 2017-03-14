@@ -62,7 +62,7 @@ public class WebXmlScannerTest {
     IFile servletClass = project.getFile("src/main/java/ServletClass.java");
     servletClass.create(
     	new ByteArrayInputStream("package src.main.java; public class ServletClass {}"
-    		.getBytes(StandardCharsets.UTF_8)), true, null);
+    	.getBytes(StandardCharsets.UTF_8)), true, null);
   }
   
   @Before
