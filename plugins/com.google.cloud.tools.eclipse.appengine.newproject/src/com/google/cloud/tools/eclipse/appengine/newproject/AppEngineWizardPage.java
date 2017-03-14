@@ -43,7 +43,7 @@ public abstract class AppEngineWizardPage extends WizardNewProjectCreationPage {
   private Text javaPackageField;
   private AppEngineLibrariesSelectorGroup appEngineLibrariesSelectorGroup;
   private Text serviceNameField;
-  private boolean showLibrariesSelectorGroup;
+  private final boolean showLibrariesSelectorGroup;
 
   public AppEngineWizardPage(boolean showLibrariesSelectorGroup) {
     super("basicNewProjectPage"); //$NON-NLS-1$
