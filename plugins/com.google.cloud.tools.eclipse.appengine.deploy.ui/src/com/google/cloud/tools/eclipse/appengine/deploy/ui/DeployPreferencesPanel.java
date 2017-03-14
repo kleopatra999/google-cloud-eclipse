@@ -48,7 +48,7 @@ abstract class DeployPreferencesPanel extends Composite {
     return formToolkit;
   }
 
-  private void initializeFormToolkit() {
+  protected void initializeFormToolkit() {
     FormColors colors = new FormColors(getDisplay());
     colors.setBackground(null);
     colors.setForeground(null);

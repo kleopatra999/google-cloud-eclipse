@@ -61,9 +61,6 @@
         id="com.google.cloud.tools.eclipse"
         name="Google Cloud Platform"
         class="com.google.cloud.tools.eclipse.properties.GooglePropertyPage">
-       <enabledWhen>
-         <reference definitionId="com.google.cloud.tools.eclipse.appengine.onlyInGCPProjects" />
-       </enabledWhen>
     </page>
   </extension>
   
@@ -73,9 +70,6 @@
         name="App Engine Deployment"
         category="com.google.cloud.tools.eclipse"
         class="com.google.cloud.tools.eclipse.appengine.deploy.ui.DeployPropertyPage">
-      <enabledWhen>
-        <reference definitionId="com.google.cloud.tools.eclipse.appengine.onlyInGCPProjects" />
-      </enabledWhen>
     </page>
   </extension>
 
