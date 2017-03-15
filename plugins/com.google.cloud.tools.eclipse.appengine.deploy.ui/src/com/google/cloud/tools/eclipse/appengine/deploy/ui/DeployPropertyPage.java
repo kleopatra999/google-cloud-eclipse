@@ -28,11 +28,17 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.databinding.preference.PreferencePageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.preference.PreferenceDialog;
+import org.eclipse.jface.preference.PreferenceNode;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject;
@@ -45,8 +51,11 @@ import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
  */
 public class DeployPropertyPage extends PropertyPage {
 
-  private IFacetedProject facetedProject = null;
+  private static final String FACET_PAGE_ID =
+      "org.eclipse.wst.common.project.facet.ui.FacetsPropertyPage";
   private static final Logger logger = Logger.getLogger(DeployPropertyPage.class.getName());
+
+  private IFacetedProject facetedProject = null;
   private FlexDeployPreferencesPanel flexPreferencesPanel;
   private StandardDeployPreferencesPanel standardPreferencesPanel;
   private BlankDeployPreferencesPanel blankPreferencesPanel;
@@ -72,19 +81,16 @@ public class DeployPropertyPage extends PropertyPage {
       return container;
     }
 
-    IGoogleLoginService loginService =
-        PlatformUI.getWorkbench().getService(IGoogleLoginService.class);
-    IGoogleApiFactory googleApiFactory =
-        PlatformUI.getWorkbench().getService(IGoogleApiFactory.class);
-
-    blankPreferencesPanel = new BlankDeployPreferencesPanel(container);
-    standardPreferencesPanel = new StandardDeployPreferencesPanel(
-        container, project, loginService, getLayoutChangedHandler(), false /* requireValues */,
-        new ProjectRepository(googleApiFactory));
-    flexPreferencesPanel = new FlexDeployPreferencesPanel(container, project);
-
     GridDataFactory.fillDefaults().grab(true, true).applyTo(container);
 
+    getControl().addDisposeListener(new DisposeListener() {
+      @Override
+      public void widgetDisposed(DisposeEvent e) {
+        if (databindingSupport != null) {
+          databindingSupport.dispose();
+        }
+      }
+    });
     return container;
   }
 
@@ -123,15 +129,6 @@ public class DeployPropertyPage extends PropertyPage {
     super.performDefaults();
   }
 
-  @Override
-  public void dispose() {
-    blankPreferencesPanel.dispose();
-    standardPreferencesPanel.dispose();
-    flexPreferencesPanel.dispose();
-    databindingSupport.dispose();
-    super.dispose();
-  }
-
   private DeployPreferencesPanel getActivePanel() {
     return (DeployPreferencesPanel) stackLayout.topControl;
   }
@@ -139,7 +136,9 @@ public class DeployPropertyPage extends PropertyPage {
   @Override
   public void setVisible(boolean visible) {
     super.setVisible(visible);
-    evaluateFacetConfiguration();
+    if (visible) {
+      evaluateFacetConfiguration();
+    }
   }
 
   /**
@@ -149,20 +148,60 @@ public class DeployPropertyPage extends PropertyPage {
     if (databindingSupport != null) {
       databindingSupport.dispose();
     }
-    if (AppEngineStandardFacet.hasAppEngineFacet(facetedProject)) {
+    if (facetedProject != null && AppEngineStandardFacet.hasAppEngineFacet(facetedProject)) {
+      createStandardPanelIfNeeded();
       stackLayout.topControl = standardPreferencesPanel;
       databindingSupport =
           PreferencePageSupport.create(this, standardPreferencesPanel.getDataBindingContext());
-    } else if (AppEngineFlexFacet.hasAppEngineFacet(facetedProject)) {
+    } else if (facetedProject != null && AppEngineFlexFacet.hasAppEngineFacet(facetedProject)) {
+      createFlexPanelIfNeeded();
       stackLayout.topControl = flexPreferencesPanel;
       databindingSupport =
           PreferencePageSupport.create(this, flexPreferencesPanel.getDataBindingContext());
     } else {
+      createBlankPanelIfNeeded();
       stackLayout.topControl = blankPreferencesPanel;
       databindingSupport =
           PreferencePageSupport.create(this, blankPreferencesPanel.getDataBindingContext());
     }
     container.layout();
 
+  }
+
+  private void createBlankPanelIfNeeded() {
+    if (blankPreferencesPanel == null) {
+      blankPreferencesPanel = new BlankDeployPreferencesPanel(container);
+      blankPreferencesPanel.setFacetPageSelector(new Runnable() {
+        @Override
+        public void run() {
+          PreferenceDialog d = (PreferenceDialog)getContainer();
+          TreeItem[] items = d.getTreeViewer().getTree().getItems();
+          for (TreeItem treeItem : items) {
+            if (FACET_PAGE_ID.equals(((PreferenceNode)treeItem.getData()).getId())) {
+              d.getTreeViewer().setSelection(new StructuredSelection(treeItem.getData()), true);
+            }
+          }
+        }
+      });
+    }
+  }
+
+  private void createStandardPanelIfNeeded() {
+    if (standardPreferencesPanel == null) {
+      IGoogleLoginService loginService =
+          PlatformUI.getWorkbench().getService(IGoogleLoginService.class);
+      IGoogleApiFactory googleApiFactory =
+          PlatformUI.getWorkbench().getService(IGoogleApiFactory.class);
+
+      standardPreferencesPanel = new StandardDeployPreferencesPanel(
+          container, facetedProject.getProject(), loginService, getLayoutChangedHandler(),
+          false /* requireValues */, new ProjectRepository(googleApiFactory));
+    }
+  }
+
+  private void createFlexPanelIfNeeded() {
+    if (flexPreferencesPanel == null) {
+      flexPreferencesPanel = new FlexDeployPreferencesPanel(container, facetedProject.getProject());
+    }
   }
 }
