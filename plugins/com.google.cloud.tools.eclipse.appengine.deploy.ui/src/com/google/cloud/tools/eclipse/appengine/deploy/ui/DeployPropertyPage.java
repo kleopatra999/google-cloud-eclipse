@@ -174,11 +174,12 @@ public class DeployPropertyPage extends PropertyPage {
       blankPreferencesPanel.setFacetPageSelector(new Runnable() {
         @Override
         public void run() {
-          PreferenceDialog d = (PreferenceDialog)getContainer();
-          TreeItem[] items = d.getTreeViewer().getTree().getItems();
+          PreferenceDialog preferenceDialog = (PreferenceDialog)getContainer();
+          TreeItem[] items = preferenceDialog.getTreeViewer().getTree().getItems();
           for (TreeItem treeItem : items) {
             if (FACET_PAGE_ID.equals(((PreferenceNode)treeItem.getData()).getId())) {
-              d.getTreeViewer().setSelection(new StructuredSelection(treeItem.getData()), true);
+              preferenceDialog.getTreeViewer().setSelection(
+                  new StructuredSelection(treeItem.getData()), true);
             }
           }
         }
