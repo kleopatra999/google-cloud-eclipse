@@ -17,27 +17,9 @@
 package com.google.cloud.tools.eclipse.ui.util.images;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.graphics.Image;
 
 public class SharedImages {
 
-  private static final ImageDescriptor refreshPngImageDescriptor =
+  public static final ImageDescriptor REFRESH_IMAGE_DESCRIPTOR =
       ImageDescriptor.createFromFile(SharedImages.class, "/icons/refresh.png");
-
-  /**
-   * Creates an {@link Image} to be used to indicate a 'refresh' action.
-   * <p>
-   * The caller is responsible for disposing the Image once it's not needed anymore by
-   * calling {@link Image#dispose()} on the image object.
-   *
-   * @return the image or null if the image was not found
-   */
-  public static Image createRefreshIcon(Device device) {
-    if (refreshPngImageDescriptor != null) {
-      return refreshPngImageDescriptor.createImage(device);
-    } else {
-      return null;
-    }
-  }
 }
