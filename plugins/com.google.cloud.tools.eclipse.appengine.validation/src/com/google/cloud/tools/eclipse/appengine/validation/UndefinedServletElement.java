@@ -25,12 +25,11 @@ public class UndefinedServletElement extends BannedElement {
 
   private static final String markerId = 
       "com.google.cloud.tools.eclipse.appengine.validation.undefinedServletMarker";
-  private static final int severity = IMarker.SEVERITY_ERROR;
   private final String servletClassName;
   
   public UndefinedServletElement(String servletClassName, DocumentLocation start, int length) {
     super(Messages.getString("undefined.servlet.class", servletClassName),
-        markerId, severity, start, length);
+        markerId, IMarker.SEVERITY_ERROR, start, length);
     this.servletClassName = servletClassName;
   }
   

@@ -35,6 +35,11 @@
           <file type="file" name="appengine-web.xml"/>
         </rules>
       </include>
+      <include>
+        <rules>
+          <facet id="com.google.cloud.tools.eclipse.appengine.facets.standard" version="*"/>
+        </rules>
+      </include>
     </validator>
   </extension>
   
@@ -66,6 +71,11 @@
       <include>
         <rules>
           <file type="file" name="web.xml"/>
+        </rules>
+      </include>
+      <include>
+        <rules>
+          <facet id="com.google.cloud.tools.eclipse.appengine.facets.standard" version="*"/>
         </rules>
       </include>
     </validator>
@@ -103,6 +113,11 @@
           <file type="file" name="web.xml"/>
         </rules>
       </include>
+      <include>
+        <rules>
+          <facet id="com.google.cloud.tools.eclipse.appengine.facets.standard" version="*"/>
+        </rules>
+      </include>
     </validator>
   </extension>
   
@@ -123,6 +138,11 @@
       <include>
         <rules>
           <file type="file" name="pom.xml"/>
+        </rules>
+      </include>
+      <include>
+        <rules>
+          <facet id="com.google.cloud.tools.eclipse.appengine.facets.standard" version="*"/>
         </rules>
       </include>
     </validator>

@@ -16,7 +16,6 @@
 
 package com.google.cloud.tools.eclipse.appengine.validation;
 
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,7 +28,6 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.jdt.core.search.SearchEngine;
-import org.eclipse.jdt.core.search.SearchMatch;
 import org.eclipse.jdt.core.search.SearchParticipant;
 import org.eclipse.jdt.core.search.SearchPattern;
 import org.xml.sax.Attributes;
@@ -84,7 +82,7 @@ class WebXmlScanner extends AbstractScanner {
   }
   
   @Override
-  public void characters(char ch[], int start, int length) throws SAXException {
+  public void characters(char[] ch, int start, int length) throws SAXException {
     if (insideServletClassElement) {
       servletClassElementContents.append(ch, start, length);
     }
@@ -125,12 +123,11 @@ class WebXmlScanner extends AbstractScanner {
       IProgressMonitor monitor) {
     try {
       SearchEngine searchEngine = new SearchEngine();
-      ClassSearchRequestor requestor = new ClassSearchRequestor();
+      TypeSearchRequestor requestor = new TypeSearchRequestor();
       searchEngine.search(pattern,
           new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() },
           scope, requestor, monitor);
-      List<SearchMatch> results = requestor.getResults();
-      return !results.isEmpty();
+      return requestor.foundMatch();
     } catch (CoreException ex) {
       logger.log(Level.SEVERE, ex.getMessage());
       return false;

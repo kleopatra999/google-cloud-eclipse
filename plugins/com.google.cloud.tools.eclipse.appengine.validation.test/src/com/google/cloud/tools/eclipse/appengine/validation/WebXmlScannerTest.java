@@ -31,6 +31,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jst.common.project.facet.core.JavaFacet;
+import org.eclipse.jst.j2ee.web.project.facet.WebFacetUtils;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -40,6 +42,7 @@ import org.xml.sax.ext.Locator2Impl;
 import org.xml.sax.helpers.AttributesImpl;
 
 import com.google.cloud.tools.eclipse.test.util.project.TestProjectCreator;
+import com.google.common.collect.Lists;
 
 public class WebXmlScannerTest {
 
@@ -47,7 +50,8 @@ public class WebXmlScannerTest {
   private static IJavaProject javaProject;
   private WebXmlScanner scanner;
   
-  @ClassRule public static TestProjectCreator projectCreator = new TestProjectCreator();
+  @ClassRule public static TestProjectCreator projectCreator = new TestProjectCreator()
+      .withFacetVersions(Lists.newArrayList(JavaFacet.VERSION_1_7, WebFacetUtils.WEB_25));
   
   @BeforeClass
   public static void setUpBeforeClass() throws CoreException {
@@ -55,17 +59,17 @@ public class WebXmlScannerTest {
     IProject project = projectCreator.getProject();
     javaProject = projectCreator.getJavaProject();
     
-    createFolders(project, new Path("src/main/webapp/WEB-INF"));
+    ValidationTestUtils.createFolders(project, new Path("src/main/webapp/WEB-INF"));
     resource = project.getFile("src/main/webapp/WEB-INF/web.xml");
     resource.create(new ByteArrayInputStream(new byte[0]), true, null);
     
-    createFolders(project, new Path("src/main/java"));
+    ValidationTestUtils.createFolders(project, new Path("src/main/java"));
     IFile servletClass = project.getFile("src/main/java/ServletClass.java");
     servletClass.create(
     	new ByteArrayInputStream("public class ServletClass {}".getBytes(StandardCharsets.UTF_8)),
     	true, null);
     
-    createFolders(project, new Path("com/example"));
+    ValidationTestUtils.createFolders(project, new Path("com/example"));
     IFile servletClassInPackage = project.getFile("com/example/ServletClassInPackage.java");
     servletClassInPackage.create(
         new ByteArrayInputStream("package com.example; public class ServletClassInPackage {}"
@@ -128,16 +132,6 @@ public class WebXmlScannerTest {
   @Test
   public void testFindClass_inPackage() {
     assertTrue(WebXmlScanner.classExists(javaProject, "com.example.ServletClassInPackage"));
-  }
-  
-  private static void createFolders(IContainer parent, IPath path) throws CoreException {
-    if (!path.isEmpty()) {
-      IFolder folder = parent.getFolder(new Path(path.segment(0)));
-      if (!folder.exists()) {
-        folder.create(false, true,  null);
-      }
-      createFolders(folder, path.removeFirstSegments(1));
-    }
   }
   
 }

@@ -19,21 +19,21 @@ package com.google.cloud.tools.eclipse.appengine.validation;
 import static org.junit.Assert.assertEquals;
 
 import com.google.cloud.tools.eclipse.test.util.project.TestProjectCreator;
+import com.google.common.collect.Lists;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import javax.xml.parsers.ParserConfigurationException;
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.junit.After;
-import org.junit.BeforeClass;
+import org.eclipse.jst.common.project.facet.core.JavaFacet;
+import org.eclipse.jst.j2ee.web.project.facet.WebFacetUtils;
+import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
 
@@ -49,25 +49,19 @@ public class PomXmlValidatorTest {
       + "<artifactId>appengine-maven-plugin</artifactId></plugin></plugins></build></project>";
   private static final String PLUGIN_MARKER =
       "com.google.cloud.tools.eclipse.appengine.validation.mavenPluginMarker";
-  private static IFile webXmlFile;
-  private static IProject project;
+  private IFile webXmlFile;
+  private IProject project;
   
-  @ClassRule public static TestProjectCreator projectCreator = new TestProjectCreator();
+  @ClassRule public static TestProjectCreator projectCreator =
+      new TestProjectCreator()
+      .withFacetVersions(Lists.newArrayList(JavaFacet.VERSION_1_7, WebFacetUtils.WEB_25));
   
-  @BeforeClass
-  public static void setUp() throws CoreException {
+  @Before
+  public void setUp() throws CoreException {
     project = projectCreator.getProject();
-    createFolders(project, new Path("src/main/webapp/WEB-INF"));
+    ValidationTestUtils.createFolders(project, new Path("src/main/webapp/WEB-INF"));
     webXmlFile = project.getFile("src/main/webapp/WEB-INF/web.xml");
-    ((IFile) webXmlFile).create(new ByteArrayInputStream(new byte[0]), true, null);
-  }
-  
-  
-  @After
-  public void tearDown() throws CoreException {
-    if (webXmlFile != null) {
-      webXmlFile.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ZERO);
-    }
+    webXmlFile.create(new ByteArrayInputStream(new byte[0]), true, null);
   }
   
   @Test
@@ -78,6 +72,7 @@ public class PomXmlValidatorTest {
     validator.validate(webXmlFile, bytes);
     IMarker[] markers = webXmlFile.findMarkers(PLUGIN_MARKER, true, IResource.DEPTH_ZERO);
     assertEquals(0, markers.length);
+    webXmlFile.delete(true, null);
   }
 
   @Test
@@ -91,13 +86,6 @@ public class PomXmlValidatorTest {
     String message = Messages.getString("maven.plugin");
     assertEquals(message, (String) markers[0].getAttribute(IMarker.MESSAGE));
     assertEquals("line 1", markers[0].getAttribute(IMarker.LOCATION));
-  }
-  
-  private static void createFolders(IContainer parent, IPath path) throws CoreException {
-    if (!path.isEmpty()) {
-      IFolder folder = parent.getFolder(new Path(path.segment(0)));
-      folder.create(true,  true,  null);
-      createFolders(folder, path.removeFirstSegments(1));
-    }
+    webXmlFile.delete(true, null);
   }
 }

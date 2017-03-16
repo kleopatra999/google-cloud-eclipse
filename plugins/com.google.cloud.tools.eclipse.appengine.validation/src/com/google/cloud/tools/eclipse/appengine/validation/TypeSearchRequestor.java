@@ -16,24 +16,21 @@
 
 package com.google.cloud.tools.eclipse.appengine.validation;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.search.SearchMatch;
 import org.eclipse.jdt.core.search.SearchRequestor;
 
-public class ClassSearchRequestor extends SearchRequestor {
+class TypeSearchRequestor extends SearchRequestor {
 
-  private final List<SearchMatch> matches = new ArrayList<>();
+  private int matchCount;
   
   @Override
   public void acceptSearchMatch(SearchMatch match) throws CoreException {
-    matches.add(match);
+    matchCount++;
   }
   
-  List<SearchMatch> getResults() {
-    return matches;
+  boolean foundMatch() {
+    return matchCount > 0;
   }
 
 }
