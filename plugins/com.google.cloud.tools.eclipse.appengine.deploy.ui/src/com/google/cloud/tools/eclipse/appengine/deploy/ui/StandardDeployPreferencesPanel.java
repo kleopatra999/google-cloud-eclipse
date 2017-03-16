@@ -87,6 +87,7 @@ public class StandardDeployPreferencesPanel extends DeployPreferencesPanel {
       "https://console.cloud.google.com/appengine/versions";
   private static final String CREATE_GCP_PROJECT_WITH_GAE_URL =
       "https://console.cloud.google.com/projectselector/appengine/create?lang=java";
+  private static final String UNICODE_REFRESH_SYMBOL = "\uD83D\uDD04";
 
   private static final Logger logger = Logger.getLogger(
       StandardDeployPreferencesPanel.class.getName());
@@ -355,7 +356,11 @@ public class StandardDeployPreferencesPanel extends DeployPreferencesPanel {
         .applyTo(projectSelector);
 
     final Button refreshProjectsButton = new Button(projectSelectorComposite, SWT.NONE);
-    refreshProjectsButton.setImage(refreshIcon);
+    if (refreshIcon == null) {
+      refreshProjectsButton.setText(UNICODE_REFRESH_SYMBOL);
+    } else {
+      refreshProjectsButton.setImage(refreshIcon);
+    }
     GridDataFactory.swtDefaults().align(SWT.END, SWT.BEGINNING).applyTo(refreshProjectsButton);
     refreshProjectsButton.addSelectionListener(new SelectionAdapter() {
       @Override
