@@ -33,6 +33,7 @@ public class ProjectSelectorSelectionChangedListener implements ISelectionChange
 
   private static String CREATE_APP_LINK =
       "https://console.cloud.google.com/appengine/create?lang=java&project={0}";
+  private static String AUTH_USER_URL_PARAM = "&authuser={0}";
 
   private final AccountSelector accountSelector;
   private final ProjectRepository projectRepository;
@@ -55,6 +56,9 @@ public class ProjectSelectorSelectionChangedListener implements ISelectionChange
         boolean hasAppEngineApplication = hasAppEngineApplication(project);
         if (!hasAppEngineApplication) {
           String link = MessageFormat.format(CREATE_APP_LINK, project.getId());
+          if (!accountSelector.getSelectedEmail().isEmpty()) {
+            link += MessageFormat.format(AUTH_USER_URL_PARAM, accountSelector.getSelectedEmail());
+          }
           projectSelector.setStatusLink(
               Messages.getString("projectselector.missing.appengine.application.link",
                                  link), link);
