@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.eclipse.appengine.libraries;
+package com.google.cloud.tools.eclipse.appengine.libraries.model;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;
@@ -23,6 +23,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import com.google.cloud.tools.eclipse.appengine.libraries.model.CloudLibraries;
 import com.google.cloud.tools.eclipse.appengine.libraries.model.Filter;
 import com.google.cloud.tools.eclipse.appengine.libraries.model.Library;
 import com.google.cloud.tools.eclipse.appengine.libraries.model.LibraryFile;
@@ -34,10 +35,10 @@ import java.util.List;
 import org.junit.Test;
 
 /**
- * Test the App Engine libraries defined in plugin.xml to validate that
+ * Test the libraries defined in plugin.xml to validate that
  * their attributes are correctly set.
  */
-public class AppEngineLibrariesInPluginXmlTest {
+public class CloudLibrariesInPluginXmlTest {
 
   private static final String APP_ENGINE_API_LIBRARY_ID = "appengine-api";
   private static final String CLOUD_ENDPOINTS_LIBRARY_ID = "appengine-endpoints";
@@ -47,13 +48,13 @@ public class AppEngineLibrariesInPluginXmlTest {
 
   @Test
   public void testLibrarySize() {
-    assertThat(AppEngineLibraries.getLibraries("appengine").size(), is(3));
-    assertThat(AppEngineLibraries.getLibraries("servlet").size(), is(2));
+    assertThat(CloudLibraries.getLibraries("appengine").size(), is(3));
+    assertThat(CloudLibraries.getLibraries("servlet").size(), is(2));
   }
 
   @Test
   public void testAppEngineApiLibraryConfig() throws URISyntaxException {
-    Library appEngineLibrary = AppEngineLibraries.getLibrary(APP_ENGINE_API_LIBRARY_ID);
+    Library appEngineLibrary = CloudLibraries.getLibrary(APP_ENGINE_API_LIBRARY_ID);
     assertThat(appEngineLibrary.getContainerPath().toString(),
                is(Library.CONTAINER_PATH_PREFIX + "/" + APP_ENGINE_API_LIBRARY_ID));
     assertThat(appEngineLibrary.getId(), is(APP_ENGINE_API_LIBRARY_ID));
@@ -76,7 +77,7 @@ public class AppEngineLibrariesInPluginXmlTest {
     assertThat(mavenCoordinates.getRepository(), is("central"));
     assertThat(mavenCoordinates.getGroupId(), is("com.google.appengine"));
     assertThat(mavenCoordinates.getArtifactId(), is("appengine-api-1.0-sdk"));
-    assertThat(mavenCoordinates.getVersion(), is("LATEST"));
+    assertThat(mavenCoordinates.getVersion(), is("1.9.50"));
     assertThat(mavenCoordinates.getType(), is("jar"));
     assertNull(mavenCoordinates.getClassifier());
 
@@ -95,7 +96,7 @@ public class AppEngineLibrariesInPluginXmlTest {
 
   @Test
   public void testEndpointsLibraryConfig() throws URISyntaxException {
-    Library endpointsLibrary = AppEngineLibraries.getLibrary(CLOUD_ENDPOINTS_LIBRARY_ID);
+    Library endpointsLibrary = CloudLibraries.getLibrary(CLOUD_ENDPOINTS_LIBRARY_ID);
     assertThat(endpointsLibrary.getContainerPath().toString(),
                is(Library.CONTAINER_PATH_PREFIX + "/" + CLOUD_ENDPOINTS_LIBRARY_ID));
     assertThat(endpointsLibrary.getId(), is(CLOUD_ENDPOINTS_LIBRARY_ID));
@@ -118,7 +119,7 @@ public class AppEngineLibrariesInPluginXmlTest {
     assertThat(mavenCoordinates.getRepository(), is("central"));
     assertThat(mavenCoordinates.getGroupId(), is("com.google.appengine"));
     assertThat(mavenCoordinates.getArtifactId(), is("appengine-endpoints"));
-    assertThat(mavenCoordinates.getVersion(), is("LATEST"));
+    assertThat(mavenCoordinates.getVersion(), is("1.9.50"));
     assertThat(mavenCoordinates.getType(), is("jar"));
     assertNull(mavenCoordinates.getClassifier());
     assertThat(libraryFile.getJavadocUri(), 
@@ -133,7 +134,7 @@ public class AppEngineLibrariesInPluginXmlTest {
 
   @Test
   public void testObjectifyLibraryConfig() throws URISyntaxException {
-    Library objectifyLibrary = AppEngineLibraries.getLibrary(OBJECTIFY_LIBRARY_ID);
+    Library objectifyLibrary = CloudLibraries.getLibrary(OBJECTIFY_LIBRARY_ID);
     assertThat(objectifyLibrary.getContainerPath().toString(),
                is(Library.CONTAINER_PATH_PREFIX + "/" + OBJECTIFY_LIBRARY_ID));
     assertThat(objectifyLibrary.getId(), is(OBJECTIFY_LIBRARY_ID));
@@ -153,7 +154,7 @@ public class AppEngineLibrariesInPluginXmlTest {
     assertThat(objectifyMavenCoordinates.getRepository(), is("central"));
     assertThat(objectifyMavenCoordinates.getGroupId(), is("com.googlecode.objectify"));
     assertThat(objectifyMavenCoordinates.getArtifactId(), is("objectify"));
-    assertThat(objectifyMavenCoordinates.getVersion(), is("5.1.14"));
+    assertThat(objectifyMavenCoordinates.getVersion(), is("5.1.15"));
     assertThat(objectifyMavenCoordinates.getType(), is("jar"));
     assertNull(objectifyMavenCoordinates.getClassifier());
 
@@ -183,7 +184,7 @@ public class AppEngineLibrariesInPluginXmlTest {
 
   @Test
   public void testServletApiLibraryConfig() throws URISyntaxException {
-    Library servletApiLibrary = AppEngineLibraries.getLibrary(SERVLET_API_LIBRARY_ID);
+    Library servletApiLibrary = CloudLibraries.getLibrary(SERVLET_API_LIBRARY_ID);
     assertThat(servletApiLibrary.getContainerPath().toString(),
                is(Library.CONTAINER_PATH_PREFIX + "/" + SERVLET_API_LIBRARY_ID));
     assertThat(servletApiLibrary.getId(), is(SERVLET_API_LIBRARY_ID));
@@ -217,7 +218,7 @@ public class AppEngineLibrariesInPluginXmlTest {
 
   @Test
   public void testJspApiLibraryConfig() throws URISyntaxException {
-    Library jspApiLibrary = AppEngineLibraries.getLibrary(JSP_API_LIBRARY_ID);
+    Library jspApiLibrary = CloudLibraries.getLibrary(JSP_API_LIBRARY_ID);
     assertThat(jspApiLibrary.getContainerPath().toString(),
                is(Library.CONTAINER_PATH_PREFIX + "/" + JSP_API_LIBRARY_ID));
     assertThat(jspApiLibrary.getId(), is(JSP_API_LIBRARY_ID));
@@ -230,14 +231,14 @@ public class AppEngineLibrariesInPluginXmlTest {
     assertNotNull(jspApiLibrary.getLibraryDependencies());
     assertTrue(jspApiLibrary.getLibraryDependencies().isEmpty());
 
-    assertThat(jspApiLibrary.getLibraryFiles().size(), is(1));
-    LibraryFile libraryFile = jspApiLibrary.getLibraryFiles().get(0);
-    assertThat(libraryFile.getJavadocUri(), is(new URI(
+    assertThat(jspApiLibrary.getLibraryFiles().size(), is(2));
+    LibraryFile jspApi = jspApiLibrary.getLibraryFiles().get(0);
+    assertThat(jspApi.getJavadocUri(), is(new URI(
         "http://docs.oracle.com/cd/E17802_01/products/products/jsp/2.1/docs/jsp-2_1-pfd2/")));
-    assertNull(libraryFile.getSourceUri());
+    assertNull(jspApi.getSourceUri());
 
-    assertNotNull(libraryFile.getMavenCoordinates());
-    MavenCoordinates mavenCoordinates = libraryFile.getMavenCoordinates();
+    assertNotNull(jspApi.getMavenCoordinates());
+    MavenCoordinates mavenCoordinates = jspApi.getMavenCoordinates();
     assertThat(mavenCoordinates.getRepository(), is("central"));
     assertThat(mavenCoordinates.getGroupId(), is("javax.servlet.jsp"));
     assertThat(mavenCoordinates.getArtifactId(), is("jsp-api"));
@@ -245,8 +246,22 @@ public class AppEngineLibrariesInPluginXmlTest {
     assertThat(mavenCoordinates.getType(), is("jar"));
     assertNull(mavenCoordinates.getClassifier());
 
-    assertNotNull(libraryFile.getFilters());
-    assertTrue(libraryFile.getFilters().isEmpty());
+    assertTrue(jspApi.getFilters().isEmpty());
+    
+    LibraryFile jstlApi = jspApiLibrary.getLibraryFiles().get(1);
+    assertThat(jstlApi.getJavadocUri(), is(new URI("https://jstl.java.net/")));
+    assertNull(jstlApi.getSourceUri());
+
+    assertNotNull(jstlApi.getMavenCoordinates());
+    MavenCoordinates jstlCoordinates = jstlApi.getMavenCoordinates();
+    assertThat(jstlCoordinates.getRepository(), is("central"));
+    assertThat(jstlCoordinates.getGroupId(), is("javax.servlet"));
+    assertThat(jstlCoordinates.getArtifactId(), is("jstl"));
+    assertThat(jstlCoordinates.getVersion(), is("1.2"));
+    assertThat(jstlCoordinates.getType(), is("jar"));
+    assertNull(jstlCoordinates.getClassifier());
+
+    assertTrue(jstlApi.getFilters().isEmpty());
   }
 
 }

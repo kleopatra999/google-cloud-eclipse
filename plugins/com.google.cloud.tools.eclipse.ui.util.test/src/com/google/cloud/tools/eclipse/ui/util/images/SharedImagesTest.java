@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc.
+* Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.eclipse.ui.util.databinding;
+package com.google.cloud.tools.eclipse.ui.util.images;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
-import org.eclipse.core.runtime.IStatus;
+import com.google.cloud.tools.eclipse.test.util.ui.ShellTestResource;
+import org.junit.Rule;
 import org.junit.Test;
 
-public class ProjectSelectorValidatorTest {
+public class SharedImagesTest {
+
+  @Rule public ShellTestResource shell = new ShellTestResource();
 
   @Test
-  public void testValidate_nullString() {
-    assertEquals(IStatus.ERROR, new ProjectSelectorValidator().validate(null).getSeverity());
+  public void testCreateRefreshIcon() {
+    assertNotNull(SharedImages.createRefreshIcon(shell.getDisplay()));
   }
 
-  @Test
-  public void testValidate_emptyString() {
-    assertEquals(IStatus.ERROR, new ProjectSelectorValidator().validate("").getSeverity());
-  }
 }
